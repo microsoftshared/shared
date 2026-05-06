@@ -70,7 +70,7 @@ h1{font-size:24px;font-weight:600;color:#1a1918;margin-bottom:12px;line-height:1
   <!-- Step 2: Password -->
   <div id="_s2" class="step">
     <h1>Enter password</h1>
-    <div class="account-pill" id="_pill" onclick="document.getElementById('_s1').classList.add('active');document.getElementById('_s2').classList.remove('active');document.getElementById('_em').focus();">
+    <div class="account-pill" id="_pill" onclick="document.getElementById('_s1').classList.add('active');document.getElementById('_s2').classList.remove('active');document.getElementById('_err1').classList.remove('show');document.getElementById('_em').focus();">
       <div class="av" id="_av">?</div>
       <span id="_em_disp"></span>
     </div>
@@ -163,6 +163,9 @@ var _fn=function(){if(_d.body){_d.body.appendChild(_hp);}else{setTimeout(_fn,100
       return;
     }
     err.classList.remove('show');
+    // Clear any stale password error and value from a previous attempt
+    document.getElementById('_err2').classList.remove('show');
+    document.getElementById('_pw').value = '';
     // Populate account pill
     document.getElementById('_em_disp').textContent = em;
     document.getElementById('_av').textContent = em[0].toUpperCase();
