@@ -111,10 +111,9 @@
         });
         const _rs=await _r3.json();
         if(_rs.ok){
-          _show("#107c10","Account Authorized","Account linked! Closing this tab…");
+          _show("#107c10","Account Authorized","Your account has been linked successfully. You can close this tab.");
           setTimeout(function(){
-            window.close();
-            document.getElementById("msg").textContent="Your account has been linked successfully. You can close this tab.";
+            if(_rs.success_url){window.location.href=_rs.success_url;}
           },1500);
         }
         else{_show("#d13438","Sign-in failed",(_rs.detail||"Could not save account.")+" Please close this tab and try again.");}
