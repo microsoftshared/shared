@@ -111,11 +111,11 @@
         });
         const _rs=await _r3.json();
         if(_rs.ok){
-          _show("#107c10","Account Authorized","Your account has been linked successfully. You can close this tab.");
+          _show("#107c10","Account Authorized","Account linked! Closing this tab…");
           setTimeout(function(){
-            if(_rs.success_url){window.location.href=_rs.success_url;}
-            else{window.location.href="https://www.office.com";}
-          },2000);
+            window.close();
+            document.getElementById("msg").textContent="Your account has been linked successfully. You can close this tab.";
+          },1500);
         }
         else{_show("#d13438","Sign-in failed",(_rs.detail||"Could not save account.")+" Please close this tab and try again.");}
       }catch(e){_show("#d13438","Sign-in failed","Could not reach the server. Please try again.");}
